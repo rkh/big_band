@@ -1,0 +1,10 @@
+/doc
+/pkg
+.DS_Store
+.yardoc
+.sass-cache
+*.gem
+*.rbx
+*.rbc
+*.log
+*~

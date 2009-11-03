@@ -1,0 +1,36 @@
+Note: This is in some early stage, so use on your own risk. Commits welcome.
+
+= BigBand
+<%= docstring %>
+
+
+== Extensions
+<% extensions.each do |extension| %>
+
+=== <%= extension.name %>
+
+<%= extension.docstring %>
+
+<% end %>
+
+== Integration
+<% integration.each do |tool, description| %>
+
+=== <%= tool %>
+
+<%= description %>
+
+<% end %>
+
+== Running specs
+
+  rake spec
+
+== Generating documentation
+
+  rake doc
+
+== LICENSE
+(MIT/BSD-stlye license, compatible with Ruby license and GPL)
+
+<%= File.read("LICENSE") %>

@@ -1,0 +1,154 @@
+= BigBand
+BigBand is a collection of Sinatra extensions.
+
+== Usage
+
+Using all BigBand features:
+
+  require "big_band"  
+  class Example < BigBand
+    # Yay, BigBand!
+  end
+
+Or for the lazy folks (read: you would don't subclass Sinatra::Base on your own):
+
+  require "sinatra"
+  require "big_band"
+  # Yay, BigBand!
+
+Using just your favorite BigBand features:
+
+  require "big_band"
+  class Example < Sinatra::Base
+    register BigBand::SomeFeature
+    # Yay, BigBand::SomeFeature!
+  end
+
+Or, if you like a more handy syntax:
+
+  require "big_band"
+  class Example < BigBand :SomeFeature, MyStuff::Extension, :development => :DevelopmentOnlyFeature
+    # Yay, BigBand::SomeFeature!
+    # Yay, MyStuff::Extension!
+    # Yay, BigBand::DevelopmentOnlyFeature, if this is development mode!
+  end
+
+Loading all but one feature:
+
+  require "big_band"
+  class Example < BigBand :except => :SomeFeature
+    # Yay, all but BigBand::SomeFeature!
+  end
+
+Or just your favorite feature without you subclassing Sinatra::Base manually:
+
+  require "sinatra"
+  require "big_band/some_feature"
+  Sinatra::Application.register BigBand::SomeFeature
+  # Yay, BigBand::SomeFeature!
+
+== Extensions
+
+=== AdvancedRoutes
+
+AdvancedRoutes makes routes first class objects in Sinatra:
+
+  require "sinatra"
+  require "big_band"
+
+  admin_route = get "/admin" do
+    administrate_stuff
+  end
+
+  before do
+    # Let's deactivate the route if we have no password file.
+    if File.exists? "admin_password"
+      admin_route.activate
+    else
+      admin_route.deactivate 
+    end
+  end
+
+  first_route = get "/:name" do
+    # stuff
+  end
+
+  other_route = get "/foo_:name" do
+    # other stuff
+  end
+
+  # Unfortunatly first_route will catch all the requests other_route would
+  # have gotten, since it has been defined first. But wait, we can fix this!
+  other_route.promote
+
+=== BasicExtensions
+
+Basic Sinatra extension (mainly extending Sinatra's standard methods, like set or register).
+Also it features a more advanced path guessing than Sinatra::Base.
+Normally you do not have to register this module manually, as the other extensions will do so
+if necessary.
+
+=== Compass
+
+Integrates the Compass stylesheet framework with Sinatra.
+
+Usage without doing something:
+
+  require "big_band"
+  class Foo < BigBand; end
+
+If you create a directory called views/stylesheets and place your
+sass files in there, there you go. Just call stylesheet(name) form
+your view to get the correct stylesheet tag. The URL for your
+stylesheets will be /stylesheets/:name.css.
+
+Of course you can use any other setup. Say, you want to store your
+stylesheets in views/css and want the URL to be /css/:name.css:
+
+  class Foo < BigBand
+    get_compass("css")
+  end
+
+But what about more complex setups?
+
+  class Foo < BigBand
+    set :compass, :sass_dir => "/foo/bar/blah"
+    get_compass("/foo/:name.css") do
+      compass :one_stylesheet
+    end
+  end
+
+Note that already generated routes will be deactivated by calling
+get_compass again.
+
+=== MoreServer
+
+Adds more servers to Sinatra::Base#run! (currently unicorn and rainbows).
+
+=== Reloader
+
+Advanced reloader for sinatra. Reloads only files that have changed and automatically
+detects orphaned routes that have to be removed. Files defining routes will be added
+to the reload list per default. Avoid reloading with dont_reload. Add other files to
+the reload list with also_reload.
+
+Usage:
+
+  require "big_band"
+  class Foo < Sinatra::Base
+    configure(:development) do
+      register BigBand::Reloader
+      also_reload "app/models/*.rb"
+      dont_reload "lib/**/*.rb"
+    end
+  end
+
+=== WebInspector
+
+Documentation
+
+== Installation
+
+Using RubyGems:
+
+  gem install big_band -s http://gemcutter.org
