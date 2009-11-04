@@ -128,6 +128,16 @@ get_compass again.
 
 Adds more servers to Sinatra::Base#run! (currently unicorn and rainbows).
 
+=== Sass
+
+BigBand::Sass extends SassScript with more functions like min or max.
+
+Example:
+  .someClass
+    width = max(!default_width - 10px, 200px)
+
+This can be used without BigBand or even Sinatra.
+
 === Reloader
 
 Advanced reloader for sinatra. Reloads only files that have changed and automatically

@@ -3,7 +3,13 @@ require "big_band/integration" # so this is usable without sinatra
 
 class BigBand < Sinatra::Base
   
-  # Documentation
+  # BigBand::Sass extends SassScript with more functions like min or max.
+  #
+  # Example:
+  #   .someClass
+  #     width = max(!default_width - 10px, 200px)
+  #
+  # This can be used without BigBand or even Sinatra.
   module Sass
     module Functions
 
