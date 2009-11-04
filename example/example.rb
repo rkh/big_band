@@ -3,7 +3,7 @@ require "big_band"
 
 class Example < BigBand :except => :Reloader
 
-  # The index page.
+  # The index page. You should see this comment in YARD.
   get "/" do
     haml :index
   end
