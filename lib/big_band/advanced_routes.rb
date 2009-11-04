@@ -34,7 +34,7 @@ class BigBand < Sinatra::Base
   module AdvancedRoutes
 
     class Route
-      attr_reader :app, :verbs, :pattern, :keys, :conditions, :block
+      attr_reader :app, :verbs, :pattern, :keys, :conditions, :block, :file
 
       # This will be called by Sinatra::Base#routes
       def initialize(app, verbs, signature)
@@ -71,6 +71,11 @@ class BigBand < Sinatra::Base
         end
         self
       end
+      
+      # true if file is known
+      def file?
+        !!@file
+      end
 
       # Moves a route to the top of the routes stack.
       # If the optional parameter is false, route will be moved to the bottom instead.
@@ -85,12 +90,18 @@ class BigBand < Sinatra::Base
     end
 
     module ClassMethods
+      def advanced_routes
+        routes.map { |v, r| r.collect { |s| Route.new(self, v, s) }}.flatten
+      end
       def get(path, opts={}, &block)
-        super.tap { |r| r.verbs.replace ['GET', 'HEAD'] }
+        super(path, opts={}, &block).tap { |r| r.verbs.replace ['GET', 'HEAD'] }
       end
       def route(verb, path, options={}, &block)
-        path = path.pattern if path.respond_to? pattern
-        Route.new self, verb, super(verb, path, options={}, &block)
+        path = path.pattern if path.respond_to? :pattern
+        route = Route.new self, verb, super(verb, path, options, &block)
+        route.file = caller_files.first.expand_path
+        invoke_hook :advanced_root_added, route
+        route
       end
     end
 

@@ -3,8 +3,10 @@ require "monkey-lib"
 
 class BigBand < Sinatra::Base
   
-  CALLERS_TO_IGNORE = (class << Sinatra::Base; CALLERS_TO_IGNORE; end)
-  CALLERS_TO_IGNORE << /\/big_band(\/.*)?\.rb$/
+  CALLERS_TO_IGNORE = (class << Sinatra::Base; CALLERS_TO_IGNORE; end) unless defined? CALLERS_TO_IGNORE
+  Dir.chdir __FILE__.dirname.dirname do
+    Dir.glob("**/*.rb") { |file| CALLERS_TO_IGNORE << Regexp.new(Regexp.escape(file)) }
+  end
 
   # Basic Sinatra extension (mainly extending Sinatra's standard methods, like set or register).
   # Also it features a more advanced path guessing than Sinatra::Base.
@@ -132,12 +134,6 @@ class BigBand < Sinatra::Base
 
     module InstanceMethods
 
-      # Extended #sass: Sets content_type to css if not already set.
-      def sass(*args)
-        content_type 'text/css', :charset => 'utf-8' unless response['Content-Type']
-        super
-      end
-
       # See BigBand::BasicExtentions::ClassMethods#root_path
       def root_path(*args)
         self.class.root_path(*args)
@@ -146,11 +142,6 @@ class BigBand < Sinatra::Base
       # See BigBand::BasicExtentions::ClassMethods#root_path
       def root_glob(*args, &block)
         self.class.root_glob(*args, &block)
-      end
-
-      # See BigBand::BasicExtentions::ClassMethods#run?
-      def run?
-        self.class.run?
       end
 
       # See BigBand::BasicExtentions::ClassMethods#root
@@ -172,7 +163,9 @@ class BigBand < Sinatra::Base
       klass.set :haml, :format => :html5, :escape_html => true
       klass.use Rack::Session::Cookie
       klass.enable :sessions
-      at_exit { run! if run? } unless Sinatra::Application == self 
+      at_exit do
+        klass.run! if klass.run? and klass != Sinatra::Application
+      end
     end
 
     def self.set_app_file(klass)

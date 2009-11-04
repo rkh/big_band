@@ -19,7 +19,83 @@ class BigBand < Sinatra::Base
   #     end
   #   end
   module Reloader
+    
+    class FileWatcher < Array
 
+      extend Enumerable
+      @map ||= {}
+      
+      def self.register(route)
+        new(route.file) << route
+      end
+      
+      def self.new(file)
+        @map[file.expand_path] = super(file)
+      end
+      
+      def self.each(&block)
+        @map.each(&block) 
+      end
+      
+      def initialize(file)
+        @reload = true
+        @file, @mtime = file, File.mtime(file)
+        super()
+      end
+      
+      def changed?
+        @mtime != File.mtime(file)
+      end
+      
+      def dont_reload!(dont = true)
+        @reload = false
+      end
+      
+      def reload?
+        @reload and changed?
+      end
+      
+      def reload
+        reload! if reload?
+      end
+      
+      def reload!
+        puts "reloading #{file}"
+        each { |route| route.deactive }
+        $LOAD_PATH.delete file
+        $LOAD_PATH.delete file.expand_path
+        clear
+        require file
+      end
+      
+    end
+    
+    def self.registered(klass)
+      klass.register AdvancedRoutes
+      klass.advanced_routes.each { |route| advanced_route_added(route) }
+      klass.before { reload_routes}
+    end
+    
+    def self.advanced_route_added(route)
+      FileWatcher.register(route) unless route.file?
+    end
+    
+    def self.thread_safe?
+      Thread and Thread.list.size > 1 and Thread.respond_to? :exclusive
+    end
+    
+    def self.reaload_routes(thread_safe = true)
+      return Thread.exclusive { reload_routes(false) } if thread_safe and thread_safe?
+      FileWatcher.each { |file| file.reload }
+    end
+    
+    def dont_reload(*files)
+      files.flatten.each do |file|
+        FileWatcher.new(file).dont_reload!
+      end
+    end
+
+=begin
     def self.registered(klass)
       klass.register BasicExtensions
       klass.before do
@@ -68,6 +144,7 @@ class BigBand < Sinatra::Base
     def also_reload(files)
       root_glob(files) { |file| routes_from(file) }
     end
+=end
 
   end
 end

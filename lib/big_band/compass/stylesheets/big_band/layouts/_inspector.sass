@@ -1,0 +1,38 @@
+@import ../utilities.sass
+@import blueprint/modules/typography.sass
+
+=layout_inspector
+  +html5
+  +blueprint-typography
+  body
+    padding: 5em 1em
+  header
+    padding: 2px 10px
+    text-align: right
+    font-size: 80%
+    background-color: #ddd
+    color: #777
+    position: fixed
+    top: 0
+    right: 0
+    width: 100%
+    nav
+      a
+        +border-radius(6px)
+        display: inline-block
+        width: 90px
+        background-color: #bbb
+        text-align: center
+        color: #000
+        text-decoration: none
+        margin-left: 3px
+        &:hover
+          background-color: #bbf
+        &:visited
+          color: #000
+    h1
+      font-weight: bold
+      margin: 0px
+      float: left
+      padding-left: 20px
+  

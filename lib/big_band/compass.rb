@@ -2,6 +2,7 @@ require "sinatra/base"
 require "big_band/basic_extensions"
 require "big_band/advanced_routes"
 require "big_band/compass/big_band"
+require "big_band/sass"
 
 class BigBand < Sinatra::Base
   
@@ -40,21 +41,19 @@ class BigBand < Sinatra::Base
     module ClassMethods
       attr_reader :compass_route
       def get_compass(path, &block)
-        if path
-          block ||= Proc.new do |file|
-            response['Cache-Control'] = 'public' if self.class.production?
-            compass block.call(params[:name]).to_sym
-          end
-          set :compass, :sass_dir => klass.views.join(path) unless compass[:sass_dir] && compass[:sass_dir].directory?
+        block ||= Proc.new do |file|
+          content_type 'text/css', :charset => 'utf-8'
+          compass :"#{path}/#{params[:name]}"
         end
+        set :compass, :sass_dir => klass.views.join(path) unless compass[:sass_dir] && compass[:sass_dir].directory?
         @compass_route.deactivate if @compass_route
-        @compass_route = get(path / ":name.css", &block)
+        @compass_route = get("/#{path}" / ":name.css", &block)
       end
     end
     
     module InstanceMethods
       def compass(file, options = {})
-        options.merge! Compass.sass_engine_options
+        options.merge! ::Compass.sass_engine_options
         sass file, options
       end
       def stylesheet(*args)
@@ -66,7 +65,7 @@ class BigBand < Sinatra::Base
       klass.register BasicExtensions
       klass.register AdvancedRoutes
       klass.extend ClassMethods
-      klass.send :include, InstanceMethod
+      klass.send :include, InstanceMethods
       klass.set :compass, :root_path => klass.root_path, :output_style => :compact,
                           :sass_dir => klass.views.join("stylesheets")
       set_app_file(klass) if klass.app_file?
@@ -74,11 +73,12 @@ class BigBand < Sinatra::Base
     
     def self.set_app_file(klass)
       klass.set :compass, :root_path => klass.root_path
-      get_compass("stylesheets") if klass.views.join("stylesheets").directory?
+      klass.get_compass("stylesheets") if klass.views.join("stylesheets").directory?
     end
     
     def self.set_compass(options = {})
-      Compass.configuration do |config|
+      return unless options.is_a? Hash
+      ::Compass.configuration do |config|
         options.each do |option, value|
           config.send "#{option}=", value
         end

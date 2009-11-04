@@ -119,7 +119,7 @@ class BigBand < Sinatra::Base
             klass.configure(key) { BigBand.load_extensions(klass, *values) }
           when :except
             exts = @nonenv_extensions.reject { |e| values.include? e }
-            exts << @env_extensions.inject({}) do |acceptet, (env, list)|
+            exts << @env_extensions.inject({}) do |accepted, (env, list)|
               accepted.merge env => list.reject { |e| values.include? e }
             end
             load_extensions(klass, *exts)

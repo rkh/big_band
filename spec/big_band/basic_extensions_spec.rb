@@ -12,9 +12,4 @@ describe BigBand::BasicExtensions do
     it "registers an extension only once"
   end
 
-  describe "sass" do
-    it "should set content type for css, if none is set"
-    it "should not set any content type if a content type is already defined"
-  end
-
 end

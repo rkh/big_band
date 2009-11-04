@@ -6,7 +6,7 @@ class BigBand < Sinatra::Base
     # Rack Handler to use Rainbows for Sinatra::Base.run!
     module Rainbows
       def self.run(app, options = {})
-        BigBand::Rack::Unicorn.run app, options.merge(:Backend => ::Rainbows)
+        BigBand::MoreServer::Unicorn.run app, options.merge(:Backend => ::Rainbows)
       end
     end
   end
