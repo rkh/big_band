@@ -160,7 +160,7 @@ Documentation
   rake doc
 
 == LICENSE
-(MIT/BSD-stlye license, compatible with Ruby license and GPL)
+(MIT/BSD-style license, compatible with Ruby license and GPL)
 
 copyright (c) 2009 Konstantin Haase.  All rights reserved.
 
