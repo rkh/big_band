@@ -34,7 +34,7 @@ class BigBand < Sinatra::Base
   module AdvancedRoutes
 
     class Route
-      attr_reader :app, :verbs, :pattern, :keys, :conditions, :block, :file
+      attr_accessor :app, :verbs, :pattern, :keys, :conditions, :block, :file
 
       # This will be called by Sinatra::Base#routes
       def initialize(app, verbs, signature)
