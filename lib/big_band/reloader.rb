@@ -26,7 +26,7 @@ class BigBand < Sinatra::Base
       @map ||= {}
       
       def self.register(route)
-        new(route.file) << route
+        new(route.file) << route if route.file?
       end
       
       def self.new(file)
@@ -61,7 +61,7 @@ class BigBand < Sinatra::Base
       
       def reload!
         puts "reloading #{file}"
-        each { |route| route.deactive }
+        each { |route| route.deactivate }
         $LOAD_PATH.delete file
         $LOAD_PATH.delete file.expand_path
         clear
@@ -73,7 +73,7 @@ class BigBand < Sinatra::Base
     def self.registered(klass)
       klass.register AdvancedRoutes
       klass.advanced_routes.each { |route| advanced_route_added(route) }
-      klass.before { reload_routes}
+      klass.before { Reloader.reload_routes }
     end
     
     def self.advanced_route_added(route)
@@ -84,7 +84,7 @@ class BigBand < Sinatra::Base
       Thread and Thread.list.size > 1 and Thread.respond_to? :exclusive
     end
     
-    def self.reaload_routes(thread_safe = true)
+    def self.reload_routes(thread_safe = true)
       return Thread.exclusive { reload_routes(false) } if thread_safe and thread_safe?
       FileWatcher.each { |file| file.reload }
     end
