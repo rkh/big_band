@@ -22,33 +22,16 @@ class BigBand < Sinatra::Base
       end
 
       get "/__inspect__/?" do
-        redirect "/__inspect__/routes"
-      end
-
-      get "/__inspect__/routes" do
-        haml :routes, {}, :routes => sinatra_app.advanced_routes
-      end
-
-      get "/__inspect__/extensions" do
-        haml :extensions, {}, :extensions => sinatra_app.extensions
-      end
-
-      get "/__inspect__/middleware" do
-        haml :middleware, {}, :middleware => sinatra_app.middleware
-      end
-      
-      get "/__inspect__/system" do
-        ruby_env = %w[
-          RUBY_VERSION RUBY_DESCRIPTION RUBY_PATCHLEVEL RUBY_PLATFORM RUBY_ENGINE RUBY_ENGINE_VERSION
-        ]
+        git_log = false
+        unless root_glob("{../,../../,}.git").empty?
+          format = ["<a href='mailto:%ae'>%an</a>", "%s", "<date>%ai</date>"]
+          format.map! { |e| "<td>#{e}</td>" }
+          git_log = %x[git log --pretty=format:"<tr>#{format.join}</tr>"]
+          git_log = false if git_log.empty?
+        end
+        ruby_env = %w[RUBY_VERSION RUBY_DESCRIPTION RUBY_PATCHLEVEL RUBY_PLATFORM RUBY_ENGINE RUBY_ENGINE_VERSION]
         ruby_env.map! { |var| [var, eval("#{var}.inspect if defined? #{var}")] }
-        haml :system, {}, :ruby_env => ruby_env
-      end
-      
-      get "/__inspect__/git_log" do
-        format = ["<a href='mailto:%ae'>%an</a>", "%s", "<date>%ai</date>"]
-        format.map! { |e| "<td>#{e}</td>" }
-        haml :git_log, {}, :log => %x[git log --pretty=format:"<tr>#{format.join}</tr>"]
+        haml :inspect, {}, :ruby_env => ruby_env, :git_log => git_log
       end
 
     end
@@ -77,11 +60,12 @@ __END__
       Generated on
       %date= Time.now
       %nav
-        %a{:href => "/__inspect__/routes"     } Routes
-        %a{:href => "/__inspect__/extensions" } Extensions
-        %a{:href => "/__inspect__/middleware" } Middleware
-        %a{:href => "/__inspect__/system"     } System
-        %a{:href => "/__inspect__/git_log"    } Git Log
+        %a{:href => "/__inspect__/#routes"     } Routes
+        %a{:href => "/__inspect__/#extensions" } Extensions
+        %a{:href => "/__inspect__/#middleware" } Middleware
+        %a{:href => "/__inspect__/#system"     } System
+        - if git_log
+          %a{:href => "/__inspect__/#git_log"  } Git Log
     %article
       !=yield
     %footer
@@ -94,7 +78,9 @@ __END__
 @import big_band/layouts/inspector.sass
 +layout_inspector
 
-@@routes
+@@inspect
+
+%a{ :name => "routes" }
 %h2 Routes
 %table
   %tr
@@ -103,40 +89,43 @@ __END__
     %th File
     %th Keys
     %th Conditions
-  - routes.each do |route|
+  - sinatra_app.each_route do |route|
     %tr
-      %td= route.verbs.join ", "
+      %td= route.verb
       %td= route.pattern.inspect
-      %td= route.file
+      %td
+        - if route.file?
+          = route.file
+          %i= "(line #{route.line})" if route.line 
       %td= route.keys.map { |e| e.inspect }.join ", "
       %td= route.conditions.map { |e| e.inspect }.join ", "
 
-@@extensions
+%a{ :name => "extensions" }
 %h2 Extensions
 %table
   %tr
     %th Extension
     %th Status
-  - extensions.each do |extension|
+  - sinatra_app.extensions.each do |extension|
     %tr
       %td= extension.name
       %td= extension.status if extension.respond_to? :status
 
-@@middleware
+%a{ :name => "middleware" }
 %h2 Middleware
 %table
   %tr
     %th Middleware
     %th Arguments
     %th Block Given
-  - middleware.each do |name, arguments, block|
+  - sinatra_app.middleware.each do |name, arguments, block|
     %tr
       %td= name
       %td= arguments.map { |e| e.inspect }.join ", "
       %td= block ? "yes" : "no"
 
-@@system
-%h2 Ruby Environment
+%a{ :name => "system" }
+%h2 System
 %table
   %tr
     %th Variable
@@ -146,14 +135,13 @@ __END__
       %td= key
       %td= value
 
-@@git_log
-%h2 Git Log
-- if log.nil? or log.empty?
-  Not a git repository, no commits yet or git not installed.
-- else
-  %table
-    %tr
-      %th Author
-      %th Subject
-      %th Date
-      != log
+- if git_log
+  %a{ :name => "git_log" }
+  %h2 Recent Git Log
+  - else
+    %table
+      %tr
+        %th Author
+        %th Subject
+        %th Date
+        != git_log
