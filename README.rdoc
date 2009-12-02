@@ -124,19 +124,13 @@ But what about more complex setups?
 Note that already generated routes will be deactivated by calling
 get_compass again.
 
+=== Integration
+
+
+
 === MoreServer
 
 Adds more servers to Sinatra::Base#run! (currently unicorn and rainbows).
-
-=== Sass
-
-BigBand::Sass extends SassScript with more functions like min or max.
-
-Example:
-  .someClass
-    width = max(!default_width - 10px, 200px)
-
-This can be used without BigBand or even Sinatra.
 
 === Reloader
 
@@ -155,6 +149,16 @@ Usage:
       dont_reload "lib/**/*.rb"
     end
   end
+
+=== Sass
+
+BigBand::Sass extends SassScript with more functions like min or max.
+
+Example:
+  .someClass
+    width = max(!default_width - 10px, 200px)
+
+This can be used without BigBand or even Sinatra.
 
 === WebInspector
 
