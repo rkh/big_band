@@ -66,8 +66,9 @@ class BigBand < Sinatra::Base
       klass.register AdvancedRoutes
       klass.extend ClassMethods
       klass.send :include, InstanceMethods
-      klass.set :compass, :root_path => klass.root_path, :output_style => :compact,
-                          :sass_dir => klass.views.join("stylesheets")
+      klass.set :compass,
+        :root_path => klass.root_path, :output_style => :compact,
+        :sass_dir => klass.views.join("stylesheets"), :line_comments => klass.development?
       set_app_file(klass) if klass.app_file?
     end
     
