@@ -17,7 +17,7 @@ class BigBand < Sinatra::Base
       # Including it just in EvaluationContext will not make the methods available
       # from Sass, including it just in Functions will cause Sass to raise an
       # NoMethodError. What causes this behaviour is not obvious from sass/script/functions.rb.
-      # More digging though the Sass code should be done.
+      # More digging through the Sass code should be done.
       ::Sass::Script::Functions::EvaluationContext.send :include, self
       ::Sass::Script::Functions.send :include, self
 
