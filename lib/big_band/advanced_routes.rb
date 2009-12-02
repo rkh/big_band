@@ -33,80 +33,154 @@ class BigBand < Sinatra::Base
   #   other_route.promote
   module AdvancedRoutes
 
-    class Route
-      attr_accessor :app, :verbs, :pattern, :keys, :conditions, :block, :file
+    module ArrayMethods
+      ::Array.send :include, self
 
-      # This will be called by Sinatra::Base#routes
-      def initialize(app, verbs, signature)
-        @app, @verbs, (@pattern, @keys, @conditions, @block) = app, [verbs].flatten, signature
+      def to_route(verb, args = {})
+        dup.to_route! verb, args
       end
 
-      # The routes signature. Should be uniq for a verb/app.
+      def to_route!(verb, args = {})
+        extend BigBand::AdvancedRoutes::Route
+        self.verb = verb
+        args.each do |key, value|
+          send "#{key}=", value
+        end
+        self
+      end
+
+      def signature
+        self
+      end
+
+    end
+
+    class RouteCollection
+
+      instance_methods.each { |meth| undef_method(meth) unless meth.to_s =~ /^(__|object_id$)/ }
+      attr_reader :routes
+
+      def initialize(*routes)
+        @routes = []
+        push routes.flatten
+      end
+
+      def push(*routes)
+        routes.flatten.each do |route|
+          raise ArgumentError, "routes for one group may only differ in verb" if signature and signature != route
+          routes << route
+        end
+        self
+      end
+      alias << push
+
+      def signature
+        routes.first
+      end
+
+      def method_missing(name, args, &block)
+        results = routes.map { |r| r.send(name, args, &block) }
+        return results.all? { |e| e } if name.to_s =~ /\?$/
+        results
+      end
+
+    end
+
+    module Route
+
+      attr_accessor :app, :verb, :file, :line
+
+      def pattern;    self[0]; end
+      def keys;       self[1]; end
+      def conditions; self[2]; end
+      def block;      self[3]; end
+      alias to_proc block
+
+      def pattern=(value);    self[0] = value; end
+      def keys=(value);       self[1] = value; end
+      def conditions=(value); self[2] = value; end
+      def block=(value);      self[3] = value; end
+
       def signature
         [pattern, keys, conditions, block]
       end
 
-      # Whether or not a route currently is part of the routes stack.
       def active?
-        verbs.all? { |verb| app.routes[verb].include? signature }
+        app.routes[verb].include? signature
       end
 
-      # Adds a route to the routes stack.
       def activate(at_top = false)
-        verbs.each do |verb|
-          next if app.routes[verb].include? signature
-          invoke_hook(:route_added, verb, path, block)
-          meth = at_top ? :unshift : :pop
-          (routes[verb] ||= []).send(meth, signature)
-        end
+        return if active?
+        invoke_hook :route_added, verb, path, block
+        invoke_hook :advanced_root_activated, self
+        meth = at_top ? :unshift : :pop
+        (app.routes[verb] ||= []).send(meth, self)
         self
       end
 
-      # Removes a route from the routes stack.
       def deactivate
-        verbs.each do |verb|
-          next unless app.routes[verb].include? signature
-          invoke_hook(:route_removed, verb, path, block)
-          (routes[verb] ||= []).delete(signature)
-        end
+        return unless active?
+        invoke_hook :route_removed, verb, path, block
+        invoke_hook :deadvanced_root_activated, self
+        (app.routes[verb] ||= []).delete(signature)
         self
       end
       
-      # true if file is known
+      def promote
+        deavtivate
+        activate(true)
+      end
+
       def file?
         !!@file
       end
-
-      # Moves a route to the top of the routes stack.
-      # If the optional parameter is false, route will be moved to the bottom instead.
-      def promote(at_top = true)
-        deactivate.activate(at_top)
+      
+      def inspect
+        "#<BigBand::AdvancedRoutes::Route #{ivar_inspect.join ", "}>"
       end
-
-      def /(path)
-        pattern.to_s / path
+      
+      private
+      
+      def ivar_inspect
+        [:signature, :verb, :app, :file, :line].map do |var|
+          value = send(var)
+          "@#{var}=#{value.inspect}" unless value.nil?
+        end.compact
       end
 
     end
 
     module ClassMethods
-      def advanced_routes
-        routes.map { |v, r| r.collect { |s| Route.new(self, v, s) }}.flatten
-      end
+
       def get(path, opts={}, &block)
-        super(path, opts={}, &block).tap { |r| r.verbs.replace ['GET', 'HEAD'] }
+        route = super(path, opts={}, &block)
+        RouteCollection.new route.to_route!("GET"), route.to_route("HEAD")
       end
+
       def route(verb, path, options={}, &block)
-        path = path.pattern if path.respond_to? :pattern
-        route = Route.new self, verb, super(verb, path, options, &block)
-        route.file = caller_files.first.expand_path
+        file, line = block.source_location if block.respond_to? :source_location
+        file ||= caller_files.first
+        route = super(verb, path, options, &block)
+        route.to_route! verb, :app => self, :file => file.expand_path, :line => line
         invoke_hook :advanced_root_added, route
         route
       end
+      
+      def each_route(&block)
+        return enum_for(:each_route) if respond_to? :enum_for and not block
+        routes.inject([]) { |result, (verb, list)| result.push *list.each(&block) }
+      end
+
     end
 
     def self.registered(klass)
       klass.extend ClassMethods
+      klass.routes.each do |verb, routes|
+        routes.each do |route|
+          route.to_route! verb, :app => klass
+          klass.send :invoke_hook, :advanced_root_added, route
+        end
+      end
     end
 
   end
