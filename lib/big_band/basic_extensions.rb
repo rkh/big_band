@@ -164,7 +164,7 @@ class BigBand < Sinatra::Base
       klass.use Rack::Session::Cookie
       klass.enable :sessions
       at_exit do
-        klass.run! if klass.run? and klass != Sinatra::Application
+        #klass.run! if klass.run? and klass != Sinatra::Application
       end
     end
 
