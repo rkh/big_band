@@ -19,46 +19,48 @@ class BigBand < Sinatra::Base
   #     end
   #   end
   module Reloader
-    
+
     class FileWatcher < Array
+
+      attr_reader :file, :mtime
 
       extend Enumerable
       @map ||= {}
-      
+
       def self.register(route)
         new(route.file) << route if route.file?
       end
-      
+
       def self.new(file)
-        @map[file.expand_path] = super(file)
+        @map[file.expand_path] ||= super(file)
       end
-      
+
       def self.each(&block)
-        @map.each(&block) 
+        @map.values.each(&block) 
       end
-      
+
       def initialize(file)
         @reload = true
         @file, @mtime = file, File.mtime(file)
         super()
       end
-      
+
       def changed?
         @mtime != File.mtime(file)
       end
-      
+
       def dont_reload!(dont = true)
         @reload = false
       end
-      
+
       def reload?
         @reload and changed?
       end
-      
+
       def reload
         reload! if reload?
       end
-      
+
       def reload!
         puts "reloading #{file}"
         each { |route| route.deactivate }
@@ -67,32 +69,42 @@ class BigBand < Sinatra::Base
         clear
         require file
       end
-      
+
     end
-    
+
+    module ClassMethods
+
+      def dont_reload(*files)
+        files.flatten.each do |file|
+          FileWatcher.new(file).dont_reload!
+        end
+      end
+
+      def also_relaod(*files)
+        files.flatten.each do |file|
+          FileWatcher.new(file).dont_reload! false
+        end
+      end
+    end
+
     def self.registered(klass)
       klass.register AdvancedRoutes
-      klass.advanced_routes.each { |route| advanced_route_added(route) }
+      klass.extend ClassMethods
+      klass.each_route { |route| advanced_route_added(route) }
       klass.before { Reloader.reload_routes }
     end
-    
+
     def self.advanced_route_added(route)
-      FileWatcher.register(route) unless route.file?
+      FileWatcher.register(route)
     end
-    
+
     def self.thread_safe?
       Thread and Thread.list.size > 1 and Thread.respond_to? :exclusive
     end
-    
+
     def self.reload_routes(thread_safe = true)
       return Thread.exclusive { reload_routes(false) } if thread_safe and thread_safe?
       FileWatcher.each { |file| file.reload }
-    end
-    
-    def dont_reload(*files)
-      files.flatten.each do |file|
-        FileWatcher.new(file).dont_reload!
-      end
     end
 
   end
