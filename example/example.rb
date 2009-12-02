@@ -7,5 +7,7 @@ class Example < BigBand
   get "/" do
     haml :index
   end
+  
+  run! if run?
 
 end
