@@ -1,5 +1,9 @@
 @import base.sass
 
-.round_corners
-  boder: solid 1px #000
-  +border-radius
+body
+  padding: 1em
+  background-color: #eee
+
+@for !i from 1 through 7
+  a.fancy-button#{!i}
+    +fancy-button-link(#800, 10px + 10px * !i)

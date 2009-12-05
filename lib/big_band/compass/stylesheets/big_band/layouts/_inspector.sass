@@ -6,45 +6,30 @@
 @import blueprint/modules/typography.sass
 
 =layout_inspector
-  !inspector_color_background = #ddd
-  !inspector_color_header = #bbb
-  !inspector_color_nav = #555
-  !inspector_color_nav_hover = #559
-  !inspector_color_nav_text = #ddd
-  !inspector_color_text = #777
-  !inspector_color_table = #fff
   +html5
   +blueprint-typography
   +fancy-paragraphs
   body
     padding: 5em 1em
-    background-color = !inspector_color_background
+    background-color: #ddd
     color
   header
-    padding: 2px 10px
+    +box-shadow(0 2px 5px rgba(0, 0, 0, 0.6))
+    padding: 0px 10px
     text-align: right
     font-size: 80%
-    background-color = !inspector_color_header
-    color = !inspector_color_text
+    background:
+      color: #999
+      image: url(/__big_band__/overlay-button.png)
+    color: #777
     position: fixed
     top: 0
     right: 0
     width: 100%
     nav
       a
-        +border-radius(6px)
-        display: inline-block
-        width: 90px
-        background-color = !inspector_color_nav
-        text-align: center
-        color = !inspector_color_nav_text
-        text-decoration: none
-        margin-left: 3px
-        &:hover
-          background-color = !inspector_color_nav_hover
-        &:visited, &:hover
-          color = !inspector_color_nav_text
-          text-decoration: none
+        +fancy-button-link(#040, 20px, 100px)
+        margin: 5px
     h1
       font-weight: bold
       margin: 0px
@@ -54,11 +39,13 @@
     font:
       weight: bold
       size: 130%
-    border-bottom = dotted 1px !inspector_color_header
+    border-bottom: dotted 1px #bbb
     width: 500px
   table
-    border = solid 1px !inspector_color_nav
-    background-color = !inspector_color_table
+    border: solid 1px #555
+    background:
+      color: #fff
+      image: url(/__big_band__/overlay-button.png)
     padding: 0px
     width: 80%
     margin: 0px
@@ -71,14 +58,14 @@
           left: 5px
           right: 20px
       th
-        background-color = !inspector_color_nav
-        color = !inspector_color_table
+        background-color: #555
+        color: #fff
         font:
           weight: bold
           size: 90%
       td
         border:
-          color = !inspector_color_background
+          color: #ddd
           style: solid
           width: 0px
           left-width: 1px
@@ -87,10 +74,10 @@
     margin-top: 20px
     +alt
   a
-    color = !inspector_color_nav_hover
+    color: #040
     text-decoration: none
     &:hover, &:visited
-      color = !inspector_color_nav_hover
+      color: #040
     &:hover
       text-decoration: underline
   

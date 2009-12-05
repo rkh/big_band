@@ -163,8 +163,8 @@ class BigBand < Sinatra::Base
       klass.set :haml, :format => :html5, :escape_html => true
       klass.use Rack::Session::Cookie
       klass.enable :sessions
-      at_exit do
-        #klass.run! if klass.run? and klass != Sinatra::Application
+      klass.get %r{/__big_band__/([^\.]+(\.[^\.]+)?)} do
+        send_file(__FILE__.expand_path.dirname / :files / params[:captures].first)
       end
     end
 
