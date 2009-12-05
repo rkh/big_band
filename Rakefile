@@ -30,6 +30,7 @@ def generate_readme(target = "README.rdoc", template = "README.rdoc.erb")
   rescue LoadError
     extensions = Dir["lib/big_band/*.rb"].map { |f| f[13..-4].to_const_string.to_sym }
   end
+  extensions.delete :Integration
   y = yard("lib/big_band/**.rb")
   extensions.map! { |e| y.child(e) }
   File.open(target, "w") do |f|
