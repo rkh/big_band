@@ -136,7 +136,7 @@ class BigBand < Sinatra::Base
   #
   #   BigBand.module_for :BasicExtension # => BigBand::BasicExtension
   #   BigBand.module_for Array           # => Array
-  #   BigBand.module_for "Foo::Bar"      # => BigBand::Foo::Bar or Foo::Bar or an exception
+  #   BigBand.module_for "Foo::Bar"      # => BigBand::Foo::Bar or Foo::Bar or raises an exception
   def self.module_for(extension)
     case extension
     when Module then extension

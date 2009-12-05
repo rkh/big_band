@@ -1,14 +1,14 @@
 SPEC = Gem::Specification.new do |s|
 
   s.name          = "big_band"
-  s.version       = "0.1.0"
-  s.date          = "2009-11-01"
+  s.version       = "0.1.1"
+  s.date          = "2009-12-05"
   s.author        = "Konstantin Haase"
   s.email         = "konstantin.mailinglists@googlemail.com"
   s.homepage      = "http://github.com/rkh/big_band"
   s.platform      = Gem::Platform::RUBY
   s.summary       = "Collection of Sinatra extensions and sinatra integration for common tools like Rake, YARD and Monk." 
-  s.files         = Dir.glob "{{lib,spec}/**/*,*.{rdoc,erb,gemspec},Rakefile},LICENSE"
+  s.files         = Dir.glob("**/*").reject { |f| File.basename(f)[0] == ?. }
   s.require_paths = ['lib']
   s.has_rdoc      = true
   s.rdoc_options  = %w[--all --inline-source --line-numbers --main README.rdoc --quiet
