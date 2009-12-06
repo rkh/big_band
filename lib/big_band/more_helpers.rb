@@ -11,6 +11,9 @@ class BigBand < Sinatra::Base
 
       private
 
+      # Will make use of capture_haml depending on whether it is called from
+      # within Haml code or not. Thus helpers may be shared between Haml and
+      # others (like ERB), but still enjoy all the fancy Haml::Helpers tools.
       def haml_helper(&block)
         return capture_haml(&block) unless is_haml?
         yield
