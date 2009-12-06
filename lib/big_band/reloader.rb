@@ -18,6 +18,8 @@ class BigBand < Sinatra::Base
   #       dont_reload "lib/**/*.rb"
   #     end
   #   end
+  #
+  # Per default this will only be acitvated in development mode.
   module Reloader
 
     class FileWatcher < Array

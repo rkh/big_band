@@ -5,9 +5,8 @@ require "big_band/compass"
 class BigBand < Sinatra::Base
 
   # The WebInspector allowes you to inspect a running Sinatra app.
-  # Just browse http://you_app/__inspect__
-  #
-  # Note: Per default this will only be acitvated in development mode.
+  # Just browse http://localhost:4567/__inspect__
+  # Per default this will only be acitvated in development mode.
   module WebInspector
 
     attr_reader :middleware 
