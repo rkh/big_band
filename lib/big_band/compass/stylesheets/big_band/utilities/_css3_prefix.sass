@@ -1,0 +1,11 @@
+=prefixed(!attribute, !value)
+  -moz-#{!attribute}    = !value
+  -webkit-#{!attribute} = !value
+  #{!attribute}         = !value
+
+=box-shadow(!parameters)
+  +prefixed(box-shadow, !parameters)
+
+=transition(!property, !duration)
+  +prefixed(transition-property, !property)
+  +prefixed(transition-duration, !duration)

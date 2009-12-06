@@ -1,11 +1,11 @@
 @import border_radius.sass
-@import box_shadow.sass
+@import css3_prefix.sass
 
 !fancy_button_color     = #222
 !fancy_button_height    = 30px
 !fancy_button_width     = auto
 !fancy_button_radius    = auto
-!fancy_button_darkening = 0.5
+!fancy_button_darkening = 0.3
 
 =fancy-button(!color = !fancy_button_color, !height = !fancy_button_height, !width = !fancy_button_width, !radius = !fancy_button_radius)
   @if !radius == auto
@@ -43,6 +43,7 @@
 
 =fancy-button-link(!color = !fancy_button_color, !height = !fancy_button_height, !width = !fancy_button_width, !radius = !fancy_button_radius, !darkening = !fancy_button_darkening)
   +fancy-button(!color, !height, !width, !radius)
+  +transition(background, 1s)
   cursor: pointer
   &:hover
     background-color = !color * !darkening
