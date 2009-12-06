@@ -162,7 +162,10 @@ Usage:
 
 === WebInspector
 
-Documentation
+The WebInspector allowes you to inspect a running Sinatra app.
+Just browse http://you_app/__inspect__
+
+Note: Per default this will only be acitvated in development mode.
 
 
 == Running specs
