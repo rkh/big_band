@@ -67,7 +67,7 @@ class BigBand < Sinatra::Base
       klass.extend ClassMethods
       klass.send :include, InstanceMethods
       klass.set :compass,
-        :root_path => klass.root_path, :output_style => :compact,
+        :project_path => klass.root_path, :output_style => (klass.development? ? :expanded : :compressed),
         :sass_dir => klass.views.join("stylesheets"), :line_comments => klass.development?
       set_app_file(klass) if klass.app_file?
     end
@@ -77,11 +77,15 @@ class BigBand < Sinatra::Base
       klass.get_compass("stylesheets") if klass.views.join("stylesheets").directory?
     end
     
-    def self.set_compass(options = {})
-      return unless options.is_a? Hash
+    def self.set_compass(klass)
       ::Compass.configuration do |config|
-        options.each do |option, value|
-          config.send "#{option}=", value
+        config.sass_options ||= {}
+        klass.compass.each do |option, value|
+          if config.respond_to? option
+            config.send "#{option}=", value
+          else
+            config.sass_options.merge! option.to_sym => value
+          end
         end
       end
     end

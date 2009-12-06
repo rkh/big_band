@@ -13,32 +13,13 @@
   min-height = max(!lt + !lb, !rt + !rb)
   +border-radius-no-min-size(!lt, !rt, !rb, !lb)
 
-=standard-border-radius-no-min-size(!lt, !rt, !rb, !lb)
-  border:
-    top:
-      left-radius = !lt
-      right-radius = !rt
-    bottom:
-      left-radius = !lb
-      right-radius = !rb
-
-=webkit-border-radius-no-min-size(!lt, !rt, !rb, !lb)
-  -webkit-border:
-    top:
-      left-radius = !lt
-      right-radius = !rt
-    bottom:
-      left-radius = !lb
-      right-radius = !rb
-
-=moz-border-radius-no-min-size(!lt, !rt, !rb, !lb)
+=border-radius-no-min-size(!lt, !rt, !rb, !lb)
+  +prefixed(border-top-left-radius,     !lt)
+  +prefixed(border-top-right-radius,    !rt)
+  +prefixed(border-bottom-left-radius,  !lb)
+  +prefixed(border-bottom-right-radius, !rb)
   -moz-border-radius:
     topleft = !lt
     topright = !rt
     bottomright = !rb
     bottomleft = !lb
-
-=border-radius-no-min-size(!lt, !rt, !rb, !lb)
-  +standard-border-radius-no-min-size(!lt, !rt, !rb, !lb)
-  +webkit-border-radius-no-min-size(!lt, !rt, !rb, !lb)
-  +moz-border-radius-no-min-size(!lt, !rt, !rb, !lb)
