@@ -180,7 +180,7 @@ class BigBand < Sinatra::Base
     @default_extensions = [@nonenv_extensions, @env_extensions].flatten
   end
 
-  default_extensions :AdvancedRoutes, :BasicExtensions, :Compass, :MoreServer, :Sass,
+  default_extensions :AdvancedRoutes, :BasicExtensions, :Compass, :MoreServer, :MoreHelpers, :Sass,
     :development => [:Reloader, :WebInspector]
 
 end

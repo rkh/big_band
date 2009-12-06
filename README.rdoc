@@ -128,6 +128,10 @@ get_compass again.
 
 Adds more servers to Sinatra::Base#run! (currently unicorn and rainbows).
 
+=== MoreHelpers
+
+Adds more helper methods (coming soon).
+
 === Sass
 
 BigBand::Sass extends SassScript with more functions like min or max.
