@@ -15,6 +15,37 @@ class BigBand < Sinatra::Base
       use_in_file_templates! __FILE__
       register BasicExtensions
       set :app_file, __FILE__
+      
+      # If this is a git project, then it returns the path to the .git directory.
+      def git_directory
+        @git_directory ||= root_glob(".{,.,./..,./../..}/.git").first
+      end
+      
+      # Whether or not this is a git project.
+      def git?
+        !!git_directory
+      end
+      
+      # Figures out some URLs to public git hosts by parsing the remote urls from the git config.
+      # Currently detects: GitHub, Codaset and Gitorious.
+      def git_remotes
+        @git_remotes ||= (File.read(git_directory / :config).scan(/\s*url\s*=\s*(.*)\n/).flatten.collect do |url|
+          case url
+          when %r{(github.com)[:/](.+)/(.+)/?\.git$}  then [$3, "GitHub",    "http://#$1/#$2/#$3", "http://#$1"]
+          when %r{(codaset.com)[:/](.+)/(.+)?\.git$}  then [$3, "Codaset",   "http://#$1/#$2/#$3", "http://#$1"]
+          when %r{(gitorious.org)[:/](.+)/.+/?\.git$} then [$2, "Gitorious", "http://#$1/#$2",     "http://#$1"]
+          end
+        end).compact
+      end
+      
+      # Recent git log.
+      def git_log
+        @git_format ||= begin
+          line = ["<a href='mailto:%ae'>%an</a>", "%s", "<date>%ai</date>"].map { |e| "<td>#{e}</td>" }.join
+          "<tr>#{line}</tr>"
+        end
+        %x[git log -50 --pretty=format:"#{@git_format}"]
+      end
 
       get "/__inspect__/screen.css" do
         content_type 'text/css', :charset => 'utf-8'
@@ -22,16 +53,9 @@ class BigBand < Sinatra::Base
       end
 
       get "/__inspect__/?" do
-        git_log = false
-        unless root_glob("{../,../../,}.git").empty?
-          format = ["<a href='mailto:%ae'>%an</a>", "%s", "<date>%ai</date>"]
-          format.map! { |e| "<td>#{e}</td>" }
-          git_log = %x[git log --pretty=format:"<tr>#{format.join}</tr>"]
-          git_log = false if git_log.empty?
-        end
         ruby_env = %w[RUBY_VERSION RUBY_DESCRIPTION RUBY_PATCHLEVEL RUBY_PLATFORM RUBY_ENGINE RUBY_ENGINE_VERSION]
         ruby_env.map! { |var| [var, eval("#{var}.inspect if defined? #{var}")] }
-        haml :inspect, {}, :ruby_env => ruby_env, :git_log => git_log
+        haml :inspect, {}, :ruby_env => ruby_env
       end
 
     end
@@ -64,7 +88,7 @@ __END__
         %a{:href => "/__inspect__/#extensions" } Extensions
         %a{:href => "/__inspect__/#middleware" } Middleware
         %a{:href => "/__inspect__/#system"     } System
-        - if git_log
+        - if git?
           %a{:href => "/__inspect__/#git_log"  } Git Log
     %article
       !=yield
@@ -135,13 +159,14 @@ __END__
       %td= key
       %td= value
 
-- if git_log
+- if git?
   %a{ :name => "git_log" }
   %h2 Recent Git Log
-  - else
-    %table
-      %tr
-        %th Author
-        %th Subject
-        %th Date
-        != git_log
+  - git_remotes.each do |name, service, url, service_url|
+    .note Visit <a href="#{url}">#{name}</a> on <a href="#{service_url}">#{service}</a>.
+  %table
+    %tr
+      %th Author
+      %th Subject
+      %th Date
+    != git_log
