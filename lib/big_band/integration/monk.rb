@@ -1,13 +1,17 @@
 require "monk"
 require "big_band/integration"
 
-class Monk < Thor
-  
-  desc "routes [FILES=#{GLOBBER.inspect}]", "lists all routes"
-  def routes(files = GLOBBER)
-    BigBand::Integration.routes_for(files).each do |verb, path|
-      say_status verb, path
+module BigBand::Integration
+  module Monk
+    def routes_task(name = :routes)
+      desc "routes [FILES=#{GLOBBER.inspect}]", "lists all routes"
+      define_method :routes do |files|
+        BigBand::Integration.routes_for(files || GLOBBER).each { |v, p| say_status v, p }
+      end
     end
-  end 
+  end
+end
 
+class Monk < Thor
+  extend BigBand::Integration::Monk
 end

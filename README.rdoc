@@ -124,23 +124,13 @@ But what about more complex setups?
 Note that already generated routes will be deactivated by calling
 get_compass again.
 
+=== MoreHelpers
+
+Adds more helper methods (more docs coming soon).
+
 === MoreServer
 
 Adds more servers to Sinatra::Base#run! (currently unicorn and rainbows).
-
-=== MoreHelpers
-
-Adds more helper methods (coming soon).
-
-=== Sass
-
-BigBand::Sass extends SassScript with more functions like min or max.
-
-Example:
-  .someClass
-    width = max(!default_width - 10px, 200px)
-
-This can be used without BigBand or even Sinatra.
 
 === Reloader
 
@@ -160,12 +150,43 @@ Usage:
     end
   end
 
+Per default this will only be acitvated in development mode.
+
+=== Sass
+
+BigBand::Sass extends SassScript with more functions like min or max.
+
+Example:
+  .someClass
+    width = max(!default_width - 10px, 200px)
+
+This can be used without BigBand or even Sinatra.
+
 === WebInspector
 
 The WebInspector allowes you to inspect a running Sinatra app.
-Just browse http://you_app/__inspect__
+Just browse http://localhost:4567/__inspect__
 
-Note: Per default this will only be acitvated in development mode.
+Per default this will only be activated in development mode.
+
+
+== Tool Integration
+
+=== Monk
+
+
+
+=== Rake
+
+
+
+=== Rspec
+
+
+
+=== Yard
+
+
 
 
 == Running specs

@@ -45,7 +45,7 @@ class BigBand < Sinatra::Base
           content_type 'text/css', :charset => 'utf-8'
           compass :"#{path}/#{params[:name]}"
         end
-        set :compass, :sass_dir => klass.views.join(path) unless compass[:sass_dir] && compass[:sass_dir].directory?
+        set :compass, :sass_dir => klass.views / path unless compass[:sass_dir] && compass[:sass_dir].directory?
         @compass_route.deactivate if @compass_route
         @compass_route = get("/#{path}" / ":name.css", &block)
       end
@@ -68,13 +68,13 @@ class BigBand < Sinatra::Base
       klass.send :include, InstanceMethods
       klass.set :compass,
         :project_path => klass.root_path, :output_style => (klass.development? ? :expanded : :compressed),
-        :sass_dir => klass.views.join("stylesheets"), :line_comments => klass.development?
+        :sass_dir => klass.views / "stylesheets", :line_comments => klass.development?
       set_app_file(klass) if klass.app_file?
     end
     
     def self.set_app_file(klass)
       klass.set :compass, :root_path => klass.root_path
-      klass.get_compass("stylesheets") if klass.views.join("stylesheets").directory?
+      klass.get_compass("stylesheets") if (klass.views / "stylesheets").directory?
     end
     
     def self.set_compass(klass)

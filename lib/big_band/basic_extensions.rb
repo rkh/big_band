@@ -2,7 +2,7 @@ require "sinatra/base"
 require "monkey-lib"
 
 class BigBand < Sinatra::Base
-  
+
   CALLERS_TO_IGNORE = (class << Sinatra::Base; CALLERS_TO_IGNORE; end) unless defined? CALLERS_TO_IGNORE
   Dir.chdir __FILE__.dirname.dirname do
     Dir.glob("**/*.rb") { |file| CALLERS_TO_IGNORE << Regexp.new(Regexp.escape(file)) }
@@ -37,9 +37,9 @@ class BigBand < Sinatra::Base
         value = old_value.merge value if value.is_a? Hash and old_value.is_a? Hash
         super(key, value)
         if symbolized
-          methods = instance_methods.map { |m| m.to_s }
-          define_method(key)       { self.class.send(key)       } unless methods.include? key.to_s
-          define_method("#{key}?") { self.class.send("#{key}?") } unless methods.include? "#{key}?"
+          method_names = instance_methods.map { |m| m.to_s }
+          define_method(key)       { self.class.send(key)       } unless method_names.include? key.to_s
+          define_method("#{key}?") { self.class.send("#{key}?") } unless method_names.include? "#{key}?"
         end
         # HACK: Sinatra::Base.set uses recursion and in the final step value always
         # is a Proc. Also, if value is a Proc no step ever follows. I abuse this to
@@ -63,7 +63,7 @@ class BigBand < Sinatra::Base
       def root_path(*args)
         relative = File.join(*args)
         return relative if relative.expand_path == relative
-        root.expand_path.join(relative)
+        root.expand_path / relative
       end
 
       # Like root_path, but does return an array instead of a string. Optionally takes a block that will

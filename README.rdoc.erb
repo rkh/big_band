@@ -14,6 +14,16 @@ Note: This is in some early stage, so use on your own risk. Commits welcome.
 <% end %>
 
 
+== Tool Integration
+<% integration.each do |tool| %>
+
+=== <%= tool.name %>
+
+<%= tool.docstring %>
+
+<% end %>
+
+
 == Running specs
 
   rake spec

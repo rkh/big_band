@@ -20,22 +20,19 @@ def yard(files)
   YARD::Registry.resolve(false, "BigBand")
 end
 
+def yard_children(ydoc, directory, &block)
+  children = Dir.glob("#{directory}/*.rb").map { |f| f[(directory.size+1)..-4].to_const_string.to_sym }
+  children.select!(&block) if block
+  children.map { |name| ydoc.child name }
+end
+
 def generate_readme(target = "README.rdoc", template = "README.rdoc.erb")
-  # HACK: loading other libraries later, for some strange heisenbug
-  docstring  = yard("lib/big_band.rb").docstring
-  begin
-    require "big_band"
-    extensions = BigBand.default_extensions.map { |e| e.respond_to?(:values) ? e.values : e }
-    extensions.flatten!
-  rescue LoadError
-    extensions = Dir["lib/big_band/*.rb"].map { |f| f[13..-4].to_const_string.to_sym }
-  end
-  extensions.delete :Integration
-  y = yard("lib/big_band/**.rb")
-  extensions.map! { |e| y.child(e) }
-  File.open(target, "w") do |f|
-    f << ERB.new(File.read(template), nil, "<>").result(binding)
-  end
+  # HACK: loading other libraries later, for some strange heisenbug setting the docstring to an empty string later.
+  docstring   = yard("lib/big_band.rb").docstring
+  ydoc        = yard("lib/big_band/{**/,}*.rb")
+  extensions  = yard_children(ydoc, "lib/big_band") { |n| n != :Integration }
+  integration = yard_children ydoc.child(:Integration), "lib/big_band/integration"
+  File.open(target, "w") { |f| f << ERB.new(File.read(template), nil, "<>").result(binding) }
 end
 
 file "README.rdoc" => ["README.rdoc.erb", "lib/big_band.rb"] do
