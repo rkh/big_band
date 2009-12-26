@@ -1,10 +1,9 @@
 require "big_band/integration/test"
-require "spec"
+require "bacon"
 
 module BigBand::Integration
-  module RSpec
+  module TestUnit
+    ::Bacon::Context.send :include, self
     include BigBand::Integration::Test
-    ::Spec::Runner.configure { |c| c.include self }
   end
-  Rspec = RSpec
 end

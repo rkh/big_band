@@ -1,10 +1,9 @@
 require "big_band/integration/test"
-require "spec"
+require "test/unit"
 
 module BigBand::Integration
-  module RSpec
+  module TestUnit
+    ::Test::Unit::TestCase.send :include, self
     include BigBand::Integration::Test
-    ::Spec::Runner.configure { |c| c.include self }
   end
-  Rspec = RSpec
 end
