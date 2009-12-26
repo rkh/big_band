@@ -4,7 +4,6 @@ require "rake/tasklib"
 
 module BigBand::Integration
   module Rake
-
     class RoutesTask < ::Rake::TaskLib
       attr_accessor :source, :name
 
