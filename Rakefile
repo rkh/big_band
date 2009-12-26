@@ -5,9 +5,10 @@ require "rake/rdoctask"
 require "monkey-lib"
 require "yard"
 
-$LOAD_PATH.unshift __FILE__.dirname / "lib"
-
+$LOAD_PATH.unshift __FILE__.dirname.expand_path / "lib"
 require "big_band/integration/yard"
+
+load "big_band.gemspec"
 
 task :default => :spec
 task :test => :spec
@@ -32,6 +33,7 @@ def generate_readme(target = "README.rdoc", template = "README.rdoc.erb")
   ydoc        = yard("lib/big_band/{**/,}*.rb")
   extensions  = yard_children(ydoc, "lib/big_band") { |n| n != :Integration }
   integration = yard_children ydoc.child(:Integration), "lib/big_band/integration"
+  version     = SPEC.version.to_s
   File.open(target, "w") { |f| f << ERB.new(File.read(template), nil, "<>").result(binding) }
 end
 
