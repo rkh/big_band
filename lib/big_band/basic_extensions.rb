@@ -29,7 +29,7 @@ class BigBand < Sinatra::Base
       def set(key, value = self, &block)
         # FIXME: refactor, refactor, refactor
         if block_given?
-          raise ArgumentError, "both a value and a block given" if value
+          raise ArgumentError, "both a value and a block given" if value != self
           value = block
         end
         symbolized = (key.to_sym if key.respond_to? :to_sym)
