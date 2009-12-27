@@ -1,7 +1,7 @@
 SPEC = Gem::Specification.new do |s|
 
   s.name          = "big_band"
-  s.version       = "0.1.2"
+  s.version       = "0.2.0"
   s.date          = "2009-12-06"
   s.author        = "Konstantin Haase"
   s.email         = "konstantin.mailinglists@googlemail.com"
