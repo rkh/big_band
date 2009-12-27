@@ -9,6 +9,7 @@ require "rack/test"
 #Webrat.configure { |config| config.mode = :sinatra }
 
 module BigBand::Integration
+  # This encapsulates general test helpers. See Bacon, RSpec, Test::Spec and Test::Unit for examples.
   module Test
 
     #include Webrat::Methods

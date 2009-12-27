@@ -2,6 +2,7 @@ require "big_band/integration"
 require "yard"
 
 module BigBand::Integration
+  # Some YARD example and description goes here.
   module YARD
 
     module CodeObjects

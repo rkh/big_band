@@ -2,6 +2,7 @@ require "monk"
 require "big_band/integration"
 
 module BigBand::Integration
+  # Some Monk example and description goes here.
   module Monk
     def routes_task(name = :routes)
       desc "routes [FILES=#{GLOBBER.inspect}]", "lists all routes"

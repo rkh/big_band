@@ -3,6 +3,7 @@ require "rake"
 require "rake/tasklib"
 
 module BigBand::Integration
+  # Some Rake example and description goes here.
   module Rake
     class RoutesTask < ::Rake::TaskLib
       attr_accessor :source, :name
