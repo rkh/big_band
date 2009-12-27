@@ -15,16 +15,21 @@ task :test => :spec
 task :clobber => "doc:clobber_rdoc"
 
 CLOBBER << "README.rdoc"
+TOOLS = { :Rspec => :RSpec, :Yard => :YARD, :TestSpec => :"Test::Spec", :TestUnit => :"Test::Unit" }
 
 def yard(files)
   YARD::Registry.load(Dir[files], true)
   YARD::Registry.resolve(false, "BigBand")
 end
 
-def yard_children(ydoc, directory, &block)
+def yard_children(ydoc, directory, defaults = {}, &block)
   children = Dir.glob("#{directory}/*.rb").map { |f| f[(directory.size+1)..-4].to_const_string.to_sym }
   children.select!(&block) if block
-  children.map { |name| ydoc.child name }
+  children.map! do |name|
+    rewritten_name = defaults[name] || name
+    ydoc.child(rewritten_name) or ydoc.child(name).tap { |c| c.name = rewritten_name }
+  end
+  children.compact
 end
 
 def generate_readme(target = "README.rdoc", template = "README.rdoc.erb")
@@ -32,7 +37,7 @@ def generate_readme(target = "README.rdoc", template = "README.rdoc.erb")
   docstring   = yard("lib/big_band.rb").docstring
   ydoc        = yard("lib/big_band/{**/,}*.rb")
   extensions  = yard_children(ydoc, "lib/big_band") { |n| n != :Integration }
-  integration = yard_children ydoc.child(:Integration), "lib/big_band/integration"
+  integration = yard_children(ydoc.child(:Integration), "lib/big_band/integration", TOOLS) { |n| n != :Test }
   version     = SPEC.version.to_s
   File.open(target, "w") { |f| f << ERB.new(File.read(template), nil, "<>").result(binding) }
 end
