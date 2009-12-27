@@ -55,40 +55,9 @@ class BigBand < Sinatra::Base
 
     end
 
-    class RouteCollection
-
-      instance_methods.each { |meth| undef_method(meth) unless meth.to_s =~ /^(__|object_id$)/ }
-      attr_reader :routes
-
-      def initialize(*routes)
-        @routes = []
-        push routes.flatten
-      end
-
-      def push(*routes)
-        routes.flatten.each do |route|
-          raise ArgumentError, "routes for one group may only differ in verb" if signature and signature != route
-          routes << route
-        end
-        self
-      end
-      alias << push
-
-      def signature
-        routes.first
-      end
-
-      def method_missing(name, args, &block)
-        results = routes.map { |r| r.send(name, args, &block) }
-        return results.all? { |e| e } if name.to_s =~ /\?$/
-        results
-      end
-
-    end
-
     module Route
 
-      attr_accessor :app, :verb, :file, :line
+      attr_accessor :app, :verb, :file, :line, :path
 
       def pattern;    self[0]; end
       def keys;       self[1]; end
@@ -106,41 +75,54 @@ class BigBand < Sinatra::Base
       end
 
       def active?
-        app.routes[verb].include? signature
+        app.routes[verb].include? self
       end
 
       def activate(at_top = false)
+        also_change.each { |r| r.activate }
         return if active?
+        meth = at_top ? :unshift : :push
+        (app.routes[verb] ||= []).send(meth, self)
         invoke_hook :route_added, verb, path, block
         invoke_hook :advanced_root_activated, self
-        meth = at_top ? :unshift : :pop
-        (app.routes[verb] ||= []).send(meth, self)
         self
       end
 
       def deactivate
+        also_change.each { |r| r.deactivate }
         return unless active?
-        invoke_hook :route_removed, verb, path, block
-        invoke_hook :deadvanced_root_activated, self
         (app.routes[verb] ||= []).delete(signature)
+        invoke_hook :route_removed, verb, path, block
+        invoke_hook :advanced_root_deactivated, self
         self
       end
-      
-      def promote
-        deavtivate
-        activate(true)
+
+      def promote(upwards = true)
+        also_change.each { |r| r.promote(upwards) }
+        deactivate
+        activate(upwards)
       end
 
       def file?
         !!@file
       end
-      
+
       def inspect
         "#<BigBand::AdvancedRoutes::Route #{ivar_inspect.join ", "}>"
       end
-      
+
+      def to_route(verb, args = {})
+        args = args.dup
+        [:app, :verb, :file, :line, :path].each { |key| args[key] ||= send(key) }
+        super(verb, args)
+      end
+
+      def also_change(*other_routes)
+        (@also_change ||= []).push(*other_routes)
+      end
+
       private
-      
+
       def ivar_inspect
         [:signature, :verb, :app, :file, :line].map do |var|
           value = send(var)
@@ -148,27 +130,42 @@ class BigBand < Sinatra::Base
         end.compact
       end
 
+      def invoke_hook(*args)
+        app.send(:invoke_hook, *args)
+      end
+
     end
 
     module ClassMethods
 
       def get(path, opts={}, &block)
-        route = super(path, opts={}, &block)
-        RouteCollection.new route.to_route!("GET"), route.to_route("HEAD")
+        first_route, *other_routes = capture_routes { super }
+        first_route.also_change(*other_routes)
+        first_route
       end
 
       def route(verb, path, options={}, &block)
         file, line = block.source_location if block.respond_to? :source_location
         file ||= caller_files.first
         route = super(verb, path, options, &block)
-        route.to_route! verb, :app => self, :file => file.expand_path, :line => line
+        route.to_route! verb, :app => self, :file => file.expand_path, :line => line, :path => path
         invoke_hook :advanced_root_added, route
+        @capture_routes << route if @capture_routes
         route
       end
-      
+
       def each_route(&block)
         return enum_for(:each_route) if respond_to? :enum_for and not block
         routes.inject([]) { |result, (verb, list)| result.push *list.each(&block) }
+      end
+
+      private
+
+      def capture_routes
+        capture_routes_was, @capture_routes = @capture_routes, []
+        yield
+        captured, @capture_routes = @capture_routes, capture_routes_was
+        captured
       end
 
     end
