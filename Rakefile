@@ -14,7 +14,9 @@ task :default => :spec
 task :test => :spec
 task :clobber => "doc:clobber_rdoc"
 
-CLOBBER << "README.rdoc"
+CLEAN.include "**/*.rbc"
+CLOBBER.include "big_band*.gem", "README.rdoc"
+
 TOOLS = { :Rspec => :RSpec, :Yard => :YARD, :TestSpec => :"Test::Spec", :TestUnit => :"Test::Unit" }
 
 def yard(files)
