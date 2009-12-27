@@ -17,7 +17,7 @@ task :clobber => "doc:clobber_rdoc"
 CLEAN.include "**/*.rbc"
 CLOBBER.include "big_band*.gem", "README.rdoc"
 
-TOOLS = { :Rspec => :RSpec, :Yard => :YARD, :TestSpec => :"Test::Spec", :TestUnit => :"Test::Unit" }
+TOOL_NAMES = { :Rspec => :RSpec, :Yard => :YARD, :TestSpec => :"Test::Spec", :TestUnit => :"Test::Unit" }
 
 def yard(files)
   YARD::Registry.load(Dir[files], true)
@@ -39,7 +39,7 @@ def generate_readme(target = "README.rdoc", template = "README.rdoc.erb")
   docstring   = yard("lib/big_band.rb").docstring
   ydoc        = yard("lib/big_band/{**/,}*.rb")
   extensions  = yard_children(ydoc, "lib/big_band") { |n| n != :Integration }
-  integration = yard_children(ydoc.child(:Integration), "lib/big_band/integration", TOOLS) { |n| n != :Test }
+  integration = yard_children(ydoc.child(:Integration), "lib/big_band/integration", TOOL_NAMES) { |n| n != :Test }
   version     = SPEC.version.to_s
   File.open(target, "w") { |f| f << ERB.new(File.read(template), nil, "<>").result(binding) }
 end
@@ -48,7 +48,7 @@ file "README.rdoc" => ["README.rdoc.erb", "lib/big_band.rb"] do
   generate_readme
 end
 
-desc "generate documentation"
+desc "Generate documentation"
 task "doc"    => "doc:yardoc"
 task "yardoc" => "doc:yardoc"
 task "rdoc"   => "doc:yardoc"
@@ -59,7 +59,7 @@ namespace :doc do
   task "rdoc"   => "readme"
   task "rerdoc" => "readme"
 
-  desc "generate README.rdoc from source files"
+  desc "Generate README.rdoc from source files"
   task "readme" do |t|
     generate_readme
   end
