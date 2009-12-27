@@ -15,7 +15,7 @@ SPEC = Gem::Specification.new do |s|
                        --tab-width 2 --title BigBand --charset UTF-8]
 
   s.add_dependency 'sinatra', '>= 0.9.4'
-  s.add_dependency 'monkey-lib', '>= 0.3.1'
+  s.add_dependency 'monkey-lib', '>= 0.3.2'
   s.add_dependency 'compass', '>= 0.8.17'
   s.add_dependency 'yard', '>= 0.5.2'
 
