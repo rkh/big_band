@@ -1,7 +1,6 @@
 require File.expand_path(__FILE__ + "../../../spec_helper.rb")
 
 describe BigBand::Sass do
-  before { app :Sass }
 
   def evaluate_sass(value)
     Sass::Script::Parser.parse(value, 0, 0).perform(Sass::Environment.new).to_s
