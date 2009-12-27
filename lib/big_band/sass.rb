@@ -2,7 +2,7 @@ require "sass"
 require "big_band/integration" # so this is usable without sinatra
 
 class BigBand < Sinatra::Base
-  
+
   # BigBand::Sass extends SassScript with more functions like min or max.
   #
   # Example:
@@ -17,11 +17,11 @@ class BigBand < Sinatra::Base
       def min(*args)
         args.min { |a, b| a.value <=> b.value }
       end
-      
+
       def max(*args)
         args.max { |a, b| a.value <=> b.value }
       end
-      
+
     end
   end
 
