@@ -14,10 +14,11 @@ SPEC = Gem::Specification.new do |s|
   s.rdoc_options  = %w[--all --inline-source --line-numbers --main README.rdoc --quiet
                        --tab-width 2 --title BigBand --charset UTF-8]
 
-  s.add_dependency 'sinatra', '>= 0.9.4'
+  s.add_dependency 'sinatra',    '>= 0.9.4'
   s.add_dependency 'monkey-lib', '>= 0.3.2'
-  s.add_dependency 'compass', '>= 0.8.17'
-  s.add_dependency 'yard', '>= 0.5.2'
+  s.add_dependency 'compass',    '>= 0.8.17'
+  s.add_dependency 'yard',       '>= 0.5.2'
+  s.add_dependency 'rack-test',  '>= 0.5.3'
 
   s.specification_version = 2 if s.respond_to? :specification_version=
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
