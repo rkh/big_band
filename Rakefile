@@ -14,7 +14,8 @@ include BigBand::Integration::Rake
 RoutesTask.new
 
 task :default => "gems:build"
-task :test => :spec
+task :install => "gems:install"
+task :test    => :spec
 task :clobber => "doc:clobber_rdoc"
 
 CLEAN.include "**/*.rbc"
