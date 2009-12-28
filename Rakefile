@@ -13,7 +13,7 @@ require "big_band/version"
 include BigBand::Integration::Rake
 RoutesTask.new
 
-task :default => :spec
+task :default => "gems:build"
 task :test => :spec
 task :clobber => "doc:clobber_rdoc"
 
@@ -90,7 +90,7 @@ task :gems => "gems:build"
 namespace :gems do
 
   desc "Build gems (runs specs first)"
-  task :build => [:clobber, :spec] do
+  task :build => [:clobber, :spec, "doc:readme"] do
     GEMS = []
     Dir.glob("*.gemspec") do |file|
       sh "gem build #{file}"
