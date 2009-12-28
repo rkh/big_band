@@ -16,7 +16,7 @@ module BigBand::Integration
   # defined in ruby files in the directories lib, app,
   # routes, models, views, and controllers (ignoring
   # non-existant directories, of course). You can change
-  # that behaviour by setting +source+ to another pattern:
+  # that behavior by setting +source+ to another pattern:
   #
   #   RoutesTask.new { |t| t.source = "**/*.rb" }
   #
