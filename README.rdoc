@@ -163,7 +163,7 @@ This can be used without BigBand or even Sinatra.
 === WebInspector
 
 The WebInspector allowes you to inspect a running Sinatra app.
-Just browse http://localhost:4567/__inspect__
+Just browse http://localhost:4567/\_\_inspect\_\_
 
 Per default this will only be activated in development mode.
 
