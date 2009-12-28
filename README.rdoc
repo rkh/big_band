@@ -203,11 +203,11 @@ will not have to scan through the source files:
   require "my_app"
   RoutesTask.new { |t| t.source = MyApp }
 
-Keep in mind that broken my_app in that case will also make
+Keep in mind that a broken my_app in this case would also make
 your Rakefile unusable.
 
 Also, you may set another name for the task either by setting
-the first argument or defining calling #name=:
+the first argument or calling #name=:
 
   RoutesTask.new(:some_routes) { |t| t.souce = SomeApp }
   RoutesTask.new do |t|
