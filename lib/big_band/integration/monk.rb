@@ -15,7 +15,7 @@ module BigBand::Integration
     def routes_task(name = :routes)
       desc "#{routes} [FILES=#{GLOBBER.inspect}]", "lists all routes"
       define_method :routes do |files|
-        BigBand::Integration.routes_for(files || GLOBBER).each { |v, p| say_status v, p }
+        BigBand::Integration.each_route(files || GLOBBER) { |v,p| say_status v, p }
       end
     end
   end
