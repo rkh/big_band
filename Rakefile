@@ -7,15 +7,23 @@ require "yard"
 
 $LOAD_PATH.unshift __FILE__.dirname.expand_path / "lib"
 require "big_band/integration/yard"
+require "big_band/integration/rake"
+require "big_band/version"
 
-load "big_band.gemspec"
+include BigBand::Integration::Rake
+RoutesTask.new
 
 task :default => :spec
 task :test => :spec
 task :clobber => "doc:clobber_rdoc"
 
 CLEAN.include "**/*.rbc"
-CLOBBER.include "big_band*.gem", "README.rdoc"
+CLOBBER.include "*.gem", "README.rdoc"
+
+Spec::Rake::SpecTask.new('spec') do |t|
+  t.spec_opts = %w[--options spec/spec.opts]
+  t.spec_files = Dir.glob 'spec/**/*_spec.rb'
+end
 
 TOOL_NAMES = { :Rspec => :RSpec, :Yard => :YARD, :TestSpec => :"Test::Spec", :TestUnit => :"Test::Unit" }
 
@@ -29,18 +37,19 @@ def yard_children(ydoc, directory, defaults = {}, &block)
   children.select!(&block) if block
   children.map! do |name|
     rewritten_name = defaults[name] || name
-    ydoc.child(rewritten_name) or ydoc.child(name).tap { |c| c.name = rewritten_name }
+    ydoc.child(rewritten_name) or ydoc.child(name).tap { |c| c.name = rewritten_name unless c.nil? }
   end
   children.compact
 end
 
 def generate_readme(target = "README.rdoc", template = "README.rdoc.erb")
+  puts "generating #{target} from #{template}"
   # HACK: loading other libraries later, for some strange heisenbug setting the docstring to an empty string later.
   docstring   = yard("lib/big_band.rb").docstring
   ydoc        = yard("lib/big_band/{**/,}*.rb")
   extensions  = yard_children(ydoc, "lib/big_band") { |n| n != :Integration }
   integration = yard_children(ydoc.child(:Integration), "lib/big_band/integration", TOOL_NAMES) { |n| n != :Test }
-  version     = SPEC.version.to_s
+  version     = BigBand::VERSION
   File.open(target, "w") { |f| f << ERB.new(File.read(template), nil, "<>").result(binding) }
 end
 
@@ -66,18 +75,54 @@ namespace :doc do
 
   Rake::RDocTask.new("rdoc") do |rdoc|
     rdoc.rdoc_dir = 'doc'
-    rdoc.options += %w[--all --inline-source --line-numbers --main README.rdoc --quiet
-                       --tab-width 2 --title BigBand --charset UTF-8]
+    rdoc.options += %w[-a -S -N -m README.rdoc -q -w 2 -t BigBand -c UTF-8]
     rdoc.rdoc_files.add ['*.{rdoc,rb}', '{config,lib,routes}/**/*.rb']
   end
-  
+
   YARD::Rake::YardocTask.new("yardoc") do |t|
-    t.options = %w[--main README.rdoc]
+    t.options = %w[--main README.rdoc --backtrace]
   end
 
 end
 
-Spec::Rake::SpecTask.new('spec') do |t|
-  t.spec_opts = %w[--options spec/spec.opts]
-  t.spec_files = Dir.glob 'spec/**/*_spec.rb'
+task :gems => "gems:build"
+
+namespace :gems do
+
+  desc "Build gems (runs specs first)"
+  task :build => [:clobber, :spec] do
+    GEMS = []
+    Dir.glob("*.gemspec") do |file|
+      sh "gem build #{file}"
+      GEMS << "#{file[0..-9]}-#{BigBand::VERSION}.gem"
+    end
+  end
+
+  desc "Install gems"
+  task :install => :build do
+    GEMS.each { |file| sh "gem install #{file}" }
+  end
+
+  desc "Publish gems (gemcutter)"
+  task :push => :build do
+    GEMS.each { |file| sh "gem push #{file}" }
+  end
+
+end
+
+############
+# aliases
+
+task :c => [:clobber, "doc:readme"]
+task :s => :spec
+task :d
+namespace :d do
+  task :r => "doc:readme"
+  task :y => "doc:yardoc"
+end
+task :g => :gems
+namespace :g do
+  task :b => "gems:build"
+  task :i => "gems:install"
+  task :p => "gems:push"
 end

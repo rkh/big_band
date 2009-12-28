@@ -1,8 +1,11 @@
+$LOAD_PATH.unshift "lib"
+require "lib/big_band/version"
+
 SPEC = Gem::Specification.new do |s|
 
   s.name          = "big_band"
-  s.version       = "0.2.0"
-  s.date          = "2009-12-06"
+  s.version       = BigBand::VERSION
+  s.date          = BigBand::DATE
   s.author        = "Konstantin Haase"
   s.email         = "konstantin.mailinglists@googlemail.com"
   s.homepage      = "http://github.com/rkh/big_band"
@@ -11,8 +14,8 @@ SPEC = Gem::Specification.new do |s|
   s.files         = Dir.glob("**/*").reject { |f| File.basename(f)[0] == ?. }
   s.require_paths = ['lib']
   s.has_rdoc      = true
-  s.rdoc_options  = %w[--all --inline-source --line-numbers --main README.rdoc --quiet
-                       --tab-width 2 --title BigBand --charset UTF-8]
+  s.description   = s.summary + " See README.rdoc for more infos."
+  s.rdoc_options  = %w[-a -S -N -m README.rdoc -q -w 2 -t BigBand -c UTF-8]
 
   s.add_dependency 'sinatra',    '>= 0.9.4'
   s.add_dependency 'monkey-lib', '>= 0.3.2'
