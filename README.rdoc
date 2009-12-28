@@ -1,4 +1,4 @@
-= BigBand 0.2.0
+= BigBand 0.2.1
 BigBand is a collection of Sinatra extensions and offers better sinatra integration for common
 tools like Rake, YARD and Monk.
 
