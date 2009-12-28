@@ -2,8 +2,27 @@ require "sinatra/base"
 #require "monkey-lib"
 require "set"
 
-# BigBand is a collection of Sinatra extensions and offers better sinatra integration for common
-# tools like Rake, YARD and Monk.
+# BigBand is a collection of Sinatra extensions and offers better sinatra integration for common tools.
+# It is pluggable and each extension can be used in stand alone mode.
+#
+# The main features are:
+# * Routes as first class objects
+# * Better handling of #set: Merges hashes, more hooks
+# * Better compass integration
+# * Rails-like helpers, like content_for
+# * Unicorn and Rainbows integration
+# * Smart code reloader only reloading changed files and getting rid of old routes
+# * Sass extensions
+# * Routes for inspection in development mode
+# * Helpers and configuration for Bacon, RSpec, Test::Spec and Test::Unit
+# * Tasks listing all routes for Monk and Rake.
+# * YARD: Add Sinatra routes to generated documentation
+#
+# Planned features:
+# * More template helpers
+# * ORM integration
+# * Configuration handling
+# * MSpec integration
 #
 # == Usage
 # 
