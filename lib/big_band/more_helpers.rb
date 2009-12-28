@@ -1,5 +1,5 @@
 require "haml"
-require "big_band/integration" # so this is usable without sinatra
+require "big_band/integration" unless defined? BigBand # so this is usable without sinatra
 
 class BigBand < Sinatra::Base
 
