@@ -247,6 +247,10 @@ Some YARD example and description goes here.
 
   rake doc
 
+== Known Issues
+* Reloader: Needs some more love, but it should not cause any harm.
+* YARD integration: Routes don't show up in list of all methods. Would prefer a routes list, anyway. Some YARD digging ahead.
+
 == LICENSE
 (MIT/BSD-style license, compatible with Ruby license and GPL)
 
