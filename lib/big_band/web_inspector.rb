@@ -5,7 +5,7 @@ require "big_band/compass"
 class BigBand < Sinatra::Base
 
   # The WebInspector allowes you to inspect a running Sinatra app.
-  # Just browse http://localhost:4567/__inspect__
+  # Just browse http://localhost:4567/\_\_inspect\_\_
   #
   # Per default this will only be activated in development mode.
   module WebInspector
@@ -50,11 +50,14 @@ class BigBand < Sinatra::Base
         %x[git log -50 --pretty=format:"#{@git_format}"]
       end
 
+      # webinspector stylesheet.
       get "/__inspect__/screen.css" do
         content_type 'text/css', :charset => 'utf-8'
         sass :stylesheet, ::Compass.sass_engine_options
       end
 
+      # Route for inspection. Currently we display all information on a single page. In case the amount of data
+      # increases, we might split this on multiple pages. Also, this would ease hooking own data into the front-end.
       get "/__inspect__/?" do
         ruby_env = %w[RUBY_VERSION RUBY_DESCRIPTION RUBY_PATCHLEVEL RUBY_PLATFORM RUBY_ENGINE RUBY_ENGINE_VERSION]
         ruby_env.map! { |var| [var, eval("#{var}.inspect if defined? #{var}")] }
