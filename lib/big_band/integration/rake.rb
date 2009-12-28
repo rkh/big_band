@@ -32,7 +32,7 @@ module BigBand::Integration
   # Also, you may set another name for the task either by setting
   # the first argument or calling #name=:
   #
-  #   RoutesTask.new(:some_routes) { |t| t.souce = SomeApp }
+  #   RoutesTask.new(:some_routes) { |t| t.source = SomeApp }
   #   RoutesTask.new do |t|
   #     t.source = AnotherApp
   #     t.name   = :other_routes
