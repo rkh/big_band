@@ -7,7 +7,19 @@ module BigBand::Integration
 
     module CodeObjects
       class RouteObject < ::YARD::CodeObjects::MethodObject
-        attr_accessor :http_verb, :http_path
+
+        ISEP = ::YARD::CodeObjects::ISEP
+
+        attr_accessor :http_verb, :http_path, :real_name
+        def name(prefix = false)
+          return super unless show_real_name?
+          prefix ? (sep == ISEP ? "#{sep}#{real_name}" : real_name.to_s) : real_name.to_sym
+        end
+
+        def show_real_name?
+          real_name and caller[1] =~ /`signature'/
+        end
+
       end
     end
 
@@ -19,27 +31,38 @@ module BigBand::Integration
 
         # Logic both handlers have in common.
         module AbstractRouteHandler
+
           def self.routes
             @routes ||= []
           end
+
           def process
             path = http_path
             path = $1 if path =~ /^"(.*)"$/
-            method_name = http_verb.upcase << " " << path
-            @route = CodeObjects::RouteObject.new(namespace, method_name, scope) do |o|
-              o.visibility = "public"
-              o.source = statement.source
-              o.signature = method_name
-              o.explicit = true
-              o.scope = scope
-              o.add_file(parser.file, statement.line)
-              o.docstring = statement.comments
-              o.http_verb = http_verb.upcase
-              o.http_path = path
-            end
-            AbstractRouteHandler.routes << @route
-            register @route
+            register_route(http_verb, path)
+            register_route('HEAD', path) if http_verb == 'GET'
           end
+
+          def register_route(verb, path, doc = nil)
+            # HACK: Removing some illegal letters.
+            method_name = "" << verb << "_" << path.gsub(/[^\w_]/, "_")
+            real_name   = "" << verb << " " << path
+            route = register CodeObjects::RouteObject.new(namespace, method_name, :instance) do |o|
+              o.visibility = "public"
+              o.source     = statement.source
+              o.signature  = real_name
+              o.explicit   = true
+              o.scope      = scope
+              o.docstring  = statement.comments
+              o.http_verb  = verb
+              o.http_path  = path
+              o.real_name  = real_name
+              o.add_file(parser.file, statement.line)
+            end
+            AbstractRouteHandler.routes << route
+            yield(route) if block_given?
+          end
+
         end
 
         # Route handler for YARD's source parser.
@@ -51,7 +74,7 @@ module BigBand::Integration
           handles method_call(:delete)
           handles method_call(:head)
           def http_verb
-            statement.method_name(true).to_s
+            statement.method_name(true).to_s.upcase
           end
           def http_path
             statement.parameters.first.source
@@ -64,7 +87,7 @@ module BigBand::Integration
             include AbstractRouteHandler
             handles /\A(get|post|put|delete|head)[\s\(].*/m
             def http_verb
-              statement.tokens.first.text
+              statement.tokens.first.text.upcase
             end
             def http_path
               statement.tokens[2].text
