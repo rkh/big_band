@@ -44,16 +44,14 @@ module BigBand::Integration
       def initialize(name = :routes)
         @name = name
         @source = BigBand::Integration::GLOBBER
-        yield self if block_given
+        yield self if block_given?
         define
       end
 
       def define
         desc "Lists routes defined in #{source}"
         task(name) do
-          BigBand::Integration.routes_for(source).each do |verb, path|
-            puts "#{verb} #{path}"
-          end
+          BigBand::Integration.each_route(source) { |v,p| puts "#{v.ljust 4} #{p}" }
         end
       end
 
