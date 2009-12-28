@@ -2,10 +2,18 @@ require "monk"
 require "big_band/integration"
 
 module BigBand::Integration
-  # Some Monk example and description goes here.
+  # In your Thorfile, place:
+  #
+  #   require "big_band/integration/monk"
+  #   class Monk < Thor
+  #     routes_task :list_routes
+  #   end
+  #
+  # Now, running 'monk list_routes' in you project directory should
+  # give you a list of all your routes.
   module Monk
     def routes_task(name = :routes)
-      desc "routes [FILES=#{GLOBBER.inspect}]", "lists all routes"
+      desc "#{routes} [FILES=#{GLOBBER.inspect}]", "lists all routes"
       define_method :routes do |files|
         BigBand::Integration.routes_for(files || GLOBBER).each { |v, p| say_status v, p }
       end

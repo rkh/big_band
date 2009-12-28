@@ -176,7 +176,15 @@ Some Bacon example and description goes here.
 
 === Monk
 
-Some Monk example and description goes here.
+In your Thorfile, place:
+
+  require "big_band/integration/monk"
+  class Monk < Thor
+    routes_task :list_routes
+  end
+
+Now, running 'monk list_routes' in you project directory should
+give you a list of all your routes.
 
 === Rake
 
