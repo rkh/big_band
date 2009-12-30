@@ -9,6 +9,7 @@ require "set"
 # * Routes as first class objects
 # * Better handling of #set: Merges hashes, more hooks
 # * Better compass integration
+# * YAML config files mapping to set (overwriting present values/methods is prevented)
 # * Rails-like helpers, like content_for
 # * Unicorn and Rainbows integration
 # * Smart code reloader only reloading changed files and getting rid of old routes
