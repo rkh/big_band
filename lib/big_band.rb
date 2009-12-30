@@ -224,6 +224,7 @@ def BigBand(*options)
 end
 
 module Sinatra
+  BigBand = ::BigBand
   module Delegator
     # Hooks into Sinatra to allow easy integration with "require 'sinatra'".
     def self.included(klass)
