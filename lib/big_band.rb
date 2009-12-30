@@ -210,6 +210,7 @@ class BigBand < Sinatra::Base
   default_extension :AdvancedRoutes,  "big_band/advanced_routes"
   default_extension :BasicExtensions, "big_band/basic_extensions"
   default_extension :Compass,         "big_band/compass"
+  default_extension :ConfigFile,      "big_band/config_file"
   default_extension :MoreHelpers,     "big_band/more_helpers"
   default_extension :MoreServer,      "big_band/more_server"
   default_extension :Reloader,        "big_band/reloader", :development
