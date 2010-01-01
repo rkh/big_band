@@ -13,6 +13,7 @@ require "big_band/integration" unless defined? BigBand
 
 module BigBand::Dependencies
   @deps = {}
+  extend Enumerable
 
   def self.dep(name = nil, data = {})
     return(@deps[name] ||= OpenStruct.new) if data.empty?
@@ -25,15 +26,17 @@ module BigBand::Dependencies
   end
 
   def self.for_gemspec(s)
-    @deps.each_value do |d|
-      s.add_dependency d.name, ">= #{d.version}"
-    end
+    each { |d| s.add_dependency d.name, ">= #{d.version}" }
   end
 
   def self.for_rip(file = nil)
     if file then File.open(file, "w") { |f| f << for_rip }
-    else @deps.values.select { |d| d.only.include? :rip }.map { |d| "#{d.git} #{d.git_ref}\n"}.join
+    else select { |d| d.only.include? :rip }.map { |d| "#{d.git} #{d.git_ref}\n"}.join
     end
+  end
+
+  def self.each(&block)
+    @deps.each_value(&block)
   end
 
 end
