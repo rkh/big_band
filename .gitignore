@@ -1,5 +1,6 @@
 /doc
 /pkg
+/vendor
 .DS_Store
 .yardoc
 .sass-cache
