@@ -1,4 +1,4 @@
-$LOAD_PATH.unshift File.expand_path(__FILE__ + "/../../lib")
+$LOAD_PATH.unshift(File.expand_path(__FILE__ + "/../../lib"), *Dir.glob(File.expand_path(__FILE__ + "/../../vendor/*/lib")))
 require "big_band"
 
 class Example < BigBand
