@@ -111,6 +111,16 @@ namespace :gems do
 
 end
 
+task :rip => "rip:generate"
+
+namespace :rip do
+  desc "generates deps.rip"
+  task :generate do
+    load "dependencies.rb"
+    BigBand::Dependencies.for_rip "deps.rip"
+  end
+end
+
 ############
 # aliases
 
