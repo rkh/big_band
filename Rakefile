@@ -13,7 +13,7 @@ require "big_band/version"
 include BigBand::Integration::Rake
 RoutesTask.new
 
-task :default => "gems:build"
+task :default => [:rip, :gems] # gems will trigger spec
 task :install => "gems:install"
 task :test    => :spec
 task :clobber => "doc:clobber_rdoc"
@@ -137,3 +137,5 @@ namespace :g do
   task :i => "gems:install"
   task :p => "gems:push"
 end
+task :r => :rip
+namespace(:r) { task :g => "rip:generate" }
