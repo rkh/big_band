@@ -1,3 +1,4 @@
+$LOAD_PATH.unshift(*Dir.glob(File.expand_path(__FILE__ + "/../vendor/*/lib")))
 require "erb"
 require "spec/rake/spectask"
 require "rake/clean"
@@ -10,8 +11,10 @@ require "big_band/integration/yard"
 require "big_band/integration/rake"
 require "big_band/version"
 
+load __FILE__.dirname.expand_path / "dependencies.rb"
+
 include BigBand::Integration::Rake
-RoutesTask.new
+RoutesTask.new { |t| t.source = "lib/**/*.rb" }
 
 task :default => [:rip, :gems] # gems will trigger spec
 task :install => "gems:install"
@@ -112,12 +115,29 @@ namespace :gems do
 end
 
 task :rip => "rip:generate"
-
 namespace :rip do
   desc "generates deps.rip"
   task :generate do
-    load "dependencies.rb"
     BigBand::Dependencies.for_rip "deps.rip"
+  end
+end
+
+desc "clone all dependencies to vendor"
+task :vendor => "vendor:all"
+namespace :vendor do
+  task :all
+  BigBand::Dependencies.each do |dep|
+    target = "vendor" / dep.name
+    task :all => dep.name
+    desc "clone #{dep.name} #{dep.version} to #{target}"
+    task dep.name do
+      mkdir_p "vendor"
+      sh "git clone #{dep.git} #{target}" unless target.file_exists?
+      chdir(target) do
+        sh "git pull"
+        sh "git checkout #{dep.git_ref}"
+      end
+    end
   end
 end
 
