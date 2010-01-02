@@ -36,17 +36,17 @@ Or you may use the extension style:
     register Sinatra::BigBand
   end
 
-NOTE: Sinatra::BigBand is just an alias for BigBand. It was introduced manly to (in my opinion) have prettier
-class signatures. First "class Example < Sinatra::BigBand" looks like Sinatra "class Example < BigBand", lets
-give some credit to our beloved framework. Also, Sinatra::BigBand seems more akin to Sinatra::Base, Sinatra::Application
-and Sinatra::Default, than just BigBand. Other than that I do not plan to move BigBand completely into Sinatra simply
-to avoid more nesting. Last, but no least, the Sinatra docs sugest placing extensions inside Sinatra.
-
-Or for the lazy folks (read: you would don't subclass Sinatra::Base on your own):
+Or for the lazy folks (if you use classic style):
 
   require "sinatra"
   require "sinatra/big_band"
   # Yay, BigBand!
+
+Sinatra::BigBand is just an alias for BigBand. It was introduced manly to (in my opinion) have prettier
+class signatures. First "class Example < Sinatra::BigBand" looks like Sinatra "class Example < BigBand", lets
+give some credit to our beloved framework. Also, Sinatra::BigBand seems more akin to Sinatra::Base, Sinatra::Application
+and Sinatra::Default, than just BigBand. Other than that I do not plan to move BigBand completely into Sinatra simply
+to avoid more nesting. Last, but no least, the Sinatra docs sugest placing extensions inside Sinatra.
 
 Using just your favorite BigBand features:
 
