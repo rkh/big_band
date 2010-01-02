@@ -51,7 +51,25 @@ module BigBand::Integration
       def define
         desc "Lists routes defined in #{source}"
         task(name) do
-          BigBand::Integration.each_route(source) { |v,p| puts "#{v.ljust 4} #{p}" }
+          list = []
+          width = 0
+          BigBand::Integration.each_route(source) do |verb, route|
+            docstring = ""
+            docstring << route.file if route.file?
+            docstring << ":" << route.line if route.line
+            if route.docstring
+              docstring << " " unless docstring.empty?
+              docstring << route.docstring
+            end
+            signature = "#{verb.downcase}(#{route.path.inspect})"
+            list << [signature, docstring]
+            width = [signature.size, width].max
+          end
+          list.each do |signature, docstring|
+            line = "#{signature.ljust width}   # #{docstring}"
+            line = line[0..99] + "…" if line.size > 100
+            puts line
+          end
         end
       end
 

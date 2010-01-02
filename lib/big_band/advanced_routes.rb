@@ -57,7 +57,11 @@ class BigBand < Sinatra::Base
 
     module Route
 
-      attr_accessor :app, :verb, :file, :line, :path
+      def self.new(verb, args = {})
+        [].to_route! verb, args
+      end
+
+      attr_accessor :app, :verb, :file, :line, :path, :docstring
 
       def pattern;    self[0]; end
       def keys;       self[1]; end

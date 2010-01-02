@@ -14,11 +14,11 @@ class BigBand < Sinatra::Base
       when Class
         source.routes
       when String
+        require "big_band/advanced_routes"
         require "big_band/integration/yard"
         ::YARD::Registry.load(Dir[source], true)
-        YARD::Handlers::Sinatra::AbstractRouteHandler.routes.inject({}) do |routes, route_object|
-          routes[route_object.http_verb] ||= []
-          routes[route_object.http_verb] << route_object.http_path
+        YARD::Handlers::Sinatra::AbstractRouteHandler.routes.inject({}) do |routes, r|
+          (routes[r.http_verb] ||= []) << AdvancedRoutes::Route.new(r.http_verb, :path => r.http_path, :docstring => r.docstring, :file => r.file)
           routes
         end
       else
@@ -29,11 +29,8 @@ class BigBand < Sinatra::Base
     def self.each_route(source)
       routes_for(source).each do |verb, routes|
         routes.each do |route|
-          path   = route.path    if route.respond_to? :path
-          path ||= route.pattern if route.respond_to? :pattern
-          path ||= route[0]      if route.is_a? Array
-          path ||= route
-          yield(verb, path)
+          #route.path ||= route.pattern
+          yield(verb, route)
         end
       end
     end
