@@ -22,22 +22,33 @@ require "set"
 # Planned features:
 # * More template helpers
 # * ORM integration
-# * Configuration handling
 # * MSpec integration
 #
 # == Usage
 # 
 # Using all BigBand features:
 #
-#   require "big_band"  
-#   class Example < BigBand
+#   require "sinatra/big_band"
+#   class Example < Sinatra::BigBand
 #     # Yay, BigBand!
 #   end
+#
+# Or you may use the extension style:
+#
+#   class AnotherExample < Sinatra::Base
+#     register Sinatra::BigBand
+#   end
+#
+# NOTE: Sinatra::BigBand is just an alias for BigBand. It was introduced manly to (in my opinion) have prettier
+# class signatures. First "class Example < Sinatra::BigBand" looks like Sinatra "class Example < BigBand", lets
+# give some credit to our beloved framework. Also, Sinatra::BigBand seems more akin to Sinatra::Base, Sinatra::Application
+# and Sinatra::Default, than just BigBand. Other than that I do not plan to move BigBand completely into Sinatra simply
+# to avoid more nesting. Last, but no least, the Sinatra docs sugest placing extensions inside Sinatra.
 #
 # Or for the lazy folks (read: you would don't subclass Sinatra::Base on your own):
 #
 #   require "sinatra"
-#   require "big_band"
+#   require "sinatra/big_band"
 #   # Yay, BigBand!
 # 
 # Using just your favorite BigBand features:
@@ -45,13 +56,13 @@ require "set"
 #   require "big_band"
 #   class Example < Sinatra::Base
 #     register BigBand::SomeFeature
-#     # Yay, BigBand::SomeFeature!
+#     # Yay, SomeFeature!
 #   end
 #
 # Or, if you like a more handy syntax:
 #
-#   require "big_band"
-#   class Example < BigBand :SomeFeature, MyStuff::Extension, :development => :DevelopmentOnlyFeature
+#   require "sinatra/big_band"
+#   class Example < Sinatra::BigBand :SomeFeature, MyStuff::Extension, :development => :DevelopmentOnlyFeature
 #     # Yay, BigBand::SomeFeature!
 #     # Yay, MyStuff::Extension!
 #     # Yay, BigBand::DevelopmentOnlyFeature, if this is development mode!
@@ -59,8 +70,8 @@ require "set"
 #
 # Loading all but one feature:
 #
-#   require "big_band"
-#   class Example < BigBand :except => :SomeFeature
+#   require "sinatra/big_band"
+#   class Example < Sinatra::BigBand :except => :SomeFeature
 #     # Yay, all but BigBand::SomeFeature!
 #   end
 #
@@ -227,6 +238,17 @@ end
 
 module Sinatra
   BigBand = ::BigBand
+  class Base
+    class << self
+      alias register_without_big_band register
+      def register(*extensions, &block)
+        big_band, normal = extensions.partition { |e| e.respond_to? :big_band_extensions }
+        big_band.each { |e| e.load_extensions self }
+        register_without_big_band(*normal, &block)
+        extensions
+      end
+    end
+  end
   module Delegator
     # Hooks into Sinatra to allow easy integration with "require 'sinatra'".
     def self.included(klass)
