@@ -16,7 +16,7 @@ load __FILE__.dirname.expand_path / "dependencies.rb"
 include BigBand::Integration::Rake
 RoutesTask.new { |t| t.source = "lib/**/*.rb" }
 
-task :default => [:rip, :gems] # gems will trigger spec
+task :default => [:dummy_files, :rip, :gems] # gems will trigger spec
 task :install => "gems:install"
 task :test    => :spec
 task :clobber => "doc:clobber_rdoc"
