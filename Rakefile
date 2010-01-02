@@ -141,6 +141,22 @@ namespace :vendor do
   end
 end
 
+desc "generate dummy files"
+task :dummy_files do |t|
+  chdir "lib" do
+    rm_rf "sinatra/big_band/"
+    mkdir_p "sinatra/big_band/"
+    Dir.glob("big_band/**/*.rb") do |file|
+      target = "sinatra" / file
+      mkdir_p target.dirname
+      File.open(target, "w") do |f|
+        f.puts "# Generated file, run 'rake #{t.name}' to regenerate"
+        f.puts "require #{file[0..-4].inspect}"
+      end
+    end
+  end
+end
+
 ############
 # aliases
 
