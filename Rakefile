@@ -157,6 +157,10 @@ task :dummy_files do |t|
   end
 end
 
+task :committed => [:clobber, "doc:readme"] do
+  raise "uncommitted changes" unless %x[git status] =~ /nothing to commit/
+end
+
 ############
 # aliases
 
