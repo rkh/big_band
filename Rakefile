@@ -157,8 +157,24 @@ task :dummy_files do |t|
   end
 end
 
-task :committed => [:clobber, "doc:readme"] do
-  raise "uncommitted changes" unless %x[git status] =~ /nothing to commit/
+desc "make a release, will fail if there are uncommitted changes or the specs don't pass"
+task :release => "release:gem"
+namespace :release do
+  task(:committed) { raise "uncommitted changes" unless %x[git status] =~ /nothing to commit/ }
+  task :version_bump => :spec, :committed do
+    new_version = ENV["VERSION"] || BigBand::VERSION.gsub(/\.(\d+)$/) { ".#{$1.to_i + 1}" }
+    old_source = File.read "lib/big_band/version.rb"
+    File.open("lib/big_band/version.rb", "w") do |f|
+      f.puts 'require "big_band/integration" unless defined? BigBand'
+      f.puts "BigBand::VERSION = #{new_version.inspect}"
+      f.puts "BigBand::DATE    = #{Date.today.to_s.inspect}"
+    end
+    puts "version bump: #{BigBand::VERSION} -> #{new_version}'"
+    BigBand::VERSION.replace new_version
+  end
+  task :prepare => [:version_bumb, :rip, :clobber, "doc:readme", "gems:build"]
+  task(:git => :prepare) { sh "git ci -am 'release: #{BigBand::VERSION}' && git push" }
+  task :gem => [:git, "gems:push"]
 end
 
 ############
