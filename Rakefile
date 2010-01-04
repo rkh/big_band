@@ -173,7 +173,12 @@ namespace :release do
     BigBand::VERSION.replace new_version
   end
   task :prepare => [:version_bump, :rip, :clobber, "doc:readme", "gems:build"]
-  task(:git => :prepare) { sh "git ci -am 'release: #{BigBand::VERSION}' && git push" }
+  task :git => :prepare do
+    message = "-m 'release: #{BigBand::VERSION}'"
+    sh "git ci -a #{message}"
+    sh "git tag -a v#{BigBand::VERSION} #{message}"
+    sh "git push && git push --tags"
+  end
   task :gem => [:git, "gems:push"]
 end
 
