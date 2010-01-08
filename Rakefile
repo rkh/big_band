@@ -160,7 +160,13 @@ end
 desc "make a release, will fail if there are uncommitted changes or the specs don't pass"
 task :release => "release:gem"
 namespace :release do
-  task(:committed) { raise "uncommitted changes" unless %x[git status] =~ /nothing to commit/ }
+
+  task(:committed) do
+    status = %x[git status]
+    raise "uncommitted changes" unless status =~ /nothing to commit/
+    raise "not on branch master" unless status =~ /On branch master\n/
+  end
+
   task :version_bump => [:spec, :committed] do
     new_version = ENV["VERSION"] || BigBand::VERSION.gsub(/\.(\d+)$/) { ".#{$1.to_i + 1}" }
     old_source = File.read "lib/big_band/version.rb"
@@ -172,14 +178,18 @@ namespace :release do
     puts "version bump: #{BigBand::VERSION} -> #{new_version}'"
     BigBand::VERSION.replace new_version
   end
+
   task :prepare => [:version_bump, :rip, :clobber, "doc:readme", "gems:build"]
+
   task :git => :prepare do
     message = "-m 'release: #{BigBand::VERSION}'"
     sh "git ci -a #{message}"
     sh "git tag -a v#{BigBand::VERSION} #{message}"
     sh "git push && git push --tags"
   end
+
   task :gem => [:git, "gems:push"]
+
 end
 
 ############
