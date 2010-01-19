@@ -1,7 +1,8 @@
 # Manages dependencies for different package management systems in a single place (I like to experiment).
 dependencies = proc do
   dep "compass",    :git => "git://github.com/chriseppstein/compass.git", :version => "0.8.17", :git_ref => "v%s"
-  dep "monkey-lib", :git => "git://github.com/rkh/monkey-lib.git",        :version => "0.3.2",  :git_ref => "v%s"
+  dep "haml",       :git => "git://github.com/nex3/haml.git",             :version => "2.2.17", :only    => :rip
+  dep "monkey-lib", :git => "git://github.com/rkh/monkey-lib.git",        :version => "0.3.5",  :git_ref => "v%s"
   dep "rack",       :git => "git://github.com/rack/rack.git",             :version => "1.0.1",  :only    => :rip
   dep "rack-test",  :git => "git://github.com/brynary/rack-test.git",     :version => "0.5.3",  :git_ref => "v%s"
   dep "sinatra",    :git => "git://github.com/sinatra/sinatra.git",       :version => "0.9.4"

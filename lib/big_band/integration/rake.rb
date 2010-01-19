@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require "big_band/integration"
 require "rake"
 require "rake/tasklib"

@@ -13,6 +13,7 @@ namespace :vendor do
       mkdir_p "vendor"
       sh "git clone #{dep.git} #{target}" unless File.exists? target
       chdir(target) do
+        sh "git checkout master"
         sh "git pull"
         sh "git checkout #{dep.git_ref}"
       end
