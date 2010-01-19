@@ -1,3 +1,31 @@
+load "dependencies.rb"
+
+desc "clone all dependencies to vendor"
+task :vendor => "vendor:all"
+namespace :vendor do
+  task :all
+  BigBand::Dependencies.each do |dep|
+    target = "vendor/#{dep.name}"
+    task :all => dep.name
+    desc "clone #{dep.name} #{dep.version} to #{target}"
+    task dep.name do
+      mkdir_p "vendor"
+      sh "git clone #{dep.git} #{target}" unless File.exists? target
+      chdir(target) do
+        sh "git pull"
+        sh "git checkout #{dep.git_ref}"
+      end
+    end
+  end
+end
+
+if ENV['RUN_CODE_RUN']
+  Rake::Task["vendor"].invoke
+  task :default => :spec
+else
+  task :default => [:dummy_files, :rip, :gems] # gems will trigger spec
+end
+
 $LOAD_PATH.unshift(*Dir.glob(File.expand_path(__FILE__ + "/../vendor/*/lib")))
 require "erb"
 require "spec/rake/spectask"
@@ -11,12 +39,9 @@ require "big_band/integration/yard"
 require "big_band/integration/rake"
 require "big_band/version"
 
-load __FILE__.dirname.expand_path / "dependencies.rb"
-
 include BigBand::Integration::Rake
 RoutesTask.new { |t| t.source = "lib/**/*.rb" }
 
-task :default => [:dummy_files, :rip, :gems] # gems will trigger spec
 task :install => "gems:install"
 task :test    => :spec
 task :clobber => "doc:clobber_rdoc"
@@ -119,25 +144,6 @@ namespace :rip do
   desc "generates deps.rip"
   task :generate do
     BigBand::Dependencies.for_rip "deps.rip"
-  end
-end
-
-desc "clone all dependencies to vendor"
-task :vendor => "vendor:all"
-namespace :vendor do
-  task :all
-  BigBand::Dependencies.each do |dep|
-    target = "vendor" / dep.name
-    task :all => dep.name
-    desc "clone #{dep.name} #{dep.version} to #{target}"
-    task dep.name do
-      mkdir_p "vendor"
-      sh "git clone #{dep.git} #{target}" unless target.file_exists?
-      chdir(target) do
-        sh "git pull"
-        sh "git checkout #{dep.git_ref}"
-      end
-    end
   end
 end
 
