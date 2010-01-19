@@ -1,3 +1,4 @@
+$LOAD_PATH.unshift "lib"
 load "dependencies.rb"
 
 desc "clone all dependencies to vendor"
