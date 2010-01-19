@@ -28,7 +28,7 @@ module BigBand::Dependencies
   end
 
   def self.for_gemspec(s)
-    each { |d| s.add_dependency d.name, ">= #{d.version}" }
+    each { |d| s.add_dependency d.name, ">= #{d.version}" if d.only.include? :gem }
   end
 
   def self.for_rip(file = nil)
