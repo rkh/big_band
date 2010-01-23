@@ -1,0 +1,3 @@
+[submodule "depgen"]
+	path = depgen
+	url = git://github.com/rkh/depgen.git
