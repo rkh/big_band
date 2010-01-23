@@ -82,7 +82,7 @@ class BigBand < Sinatra::Base
         end
       end
 
-      def also_relaod(*files)
+      def also_reload(*files)
         files.flatten.each do |file|
           FileWatcher.new(file).dont_reload! false
         end
