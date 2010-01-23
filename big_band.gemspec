@@ -1,5 +1,6 @@
-$LOAD_PATH.unshift "lib"
+$LOAD_PATH.unshift "lib", "."
 require "lib/big_band/version"
+require "dependencies"
 
 SPEC = Gem::Specification.new do |s|
 
@@ -17,12 +18,7 @@ SPEC = Gem::Specification.new do |s|
   s.description   = s.summary + " See README.rdoc for more infos."
   s.rdoc_options  = %w[-a -S -N -m README.rdoc -q -w 2 -t BigBand -c UTF-8]
 
-  s.add_dependency 'sinatra',    '>= 0.9.4'
-  s.add_dependency 'monkey-lib', '>= 0.3.2'
-  s.add_dependency 'compass',    '>= 0.8.17'
-  s.add_dependency 'yard',       '>= 0.5.2'
-  s.add_dependency 'rack-test',  '>= 0.5.3'
-
+  BigBand::Dependencies.for_gemspec(s)
   s.specification_version = 2 if s.respond_to? :specification_version=
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
 
