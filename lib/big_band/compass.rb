@@ -45,7 +45,7 @@ class BigBand < Sinatra::Base
           content_type 'text/css', :charset => 'utf-8'
           compass :"#{path}/#{params[:name]}"
         end
-        set :compass, :sass_dir => klass.views / path unless compass[:sass_dir] && compass[:sass_dir].directory?
+        set :compass, :sass_dir => views / path unless compass[:sass_dir] && compass[:sass_dir].directory?
         @compass_route.deactivate if @compass_route
         @compass_route = get("/#{path}" / ":name.css", &block)
       end
