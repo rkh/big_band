@@ -2,7 +2,7 @@ $LOAD_PATH.unshift "lib"
 load "depgen/depgen.task"
 
 if ENV['RUN_CODE_RUN']
-  Rake::Task["vendor"].invoke
+  Rake::Task["dependencies:vendor:all"].invoke
   task :default => :spec
 else
   task :default => [:dummy_files, "dependencies:generate:rip", :gems] # gems will trigger spec
