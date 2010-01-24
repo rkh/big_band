@@ -12,7 +12,6 @@ class BigBand < Sinatra::Base
           # TODO: env dependend stuff.
           use Rack::CommonLogger, $stderr
           use Rack::ShowExceptions
-          use Rack::Lint
           run app
         end.to_app
         options[:Backend] ||= ::Unicorn
