@@ -1,31 +1,11 @@
 $LOAD_PATH.unshift "lib"
-load "dependencies.rb"
-
-desc "clone all dependencies to vendor"
-task :vendor => "vendor:all"
-namespace :vendor do
-  task :all
-  BigBand::Dependencies.each do |dep|
-    target = "vendor/#{dep.name}"
-    task :all => dep.name
-    desc "clone #{dep.name} #{dep.version} to #{target}"
-    task dep.name do
-      mkdir_p "vendor"
-      sh "git clone #{dep.git} #{target}" unless File.exists? target
-      chdir(target) do
-        sh "git checkout master"
-        sh "git pull"
-        sh "git checkout #{dep.git_ref}"
-      end
-    end
-  end
-end
+load "depgen/depgen.task"
 
 if ENV['RUN_CODE_RUN']
   Rake::Task["vendor"].invoke
   task :default => :spec
 else
-  task :default => [:dummy_files, :rip, :gems] # gems will trigger spec
+  task :default => [:dummy_files, "dependencies:generate:rip", :gems] # gems will trigger spec
 end
 
 $LOAD_PATH.unshift(*Dir.glob(File.expand_path(__FILE__ + "/../vendor/*/lib")))
@@ -141,14 +121,6 @@ namespace :gems do
 
 end
 
-task :rip => "rip:generate"
-namespace :rip do
-  desc "generates deps.rip"
-  task :generate do
-    BigBand::Dependencies.for_rip "deps.rip"
-  end
-end
-
 desc "generate dummy files"
 task :dummy_files do |t|
   chdir "lib" do
@@ -187,7 +159,7 @@ namespace :release do
     BigBand::VERSION.replace new_version
   end
 
-  task :prepare => [:version_bump, :rip, :clobber, "doc:readme", "gems:build"]
+  task :prepare => [:version_bump, "dependencies:generate:rip", :clobber, "doc:readme", "gems:build"]
 
   task :git => :prepare do
     message = "-m 'release: #{BigBand::VERSION}'"
@@ -216,5 +188,3 @@ namespace :g do
   task :i => "gems:install"
   task :p => "gems:push"
 end
-task :r => :rip
-namespace(:r) { task :g => "rip:generate" }

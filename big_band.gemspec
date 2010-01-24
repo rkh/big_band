@@ -18,7 +18,7 @@ SPEC = Gem::Specification.new do |s|
   s.description   = s.summary + " See README.rdoc for more infos."
   s.rdoc_options  = %w[-a -S -N -m README.rdoc -q -w 2 -t BigBand -c UTF-8]
 
-  BigBand::Dependencies.for_gemspec(s)
+  Dependencies.setup_gem(s)
   s.specification_version = 2 if s.respond_to? :specification_version=
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
 
