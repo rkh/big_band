@@ -1,3 +1,6 @@
+Note: Current plans involve separating BigBand into independent Sinatra extensions. For convenience (read: for myself) I will still
+maintain BigBand as a collection of them all.
+
 = BigBand 0.2.5
 BigBand is a collection of Sinatra extensions and offers better sinatra integration for common tools.
 It is pluggable and each extension can be used in stand alone mode.
