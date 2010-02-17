@@ -1,0 +1,26 @@
+sym_prefix = ENV["PREFIX"] || ".."
+
+def git_clone(type)
+  if File.exist? subproject.name then $stderr.puts "#{subproject.name} already exists"
+  else sh "git clone #{subproject.send type} #{subproject.name}"
+  end
+end
+
+project_namespace :setup do
+
+  desc "sets up %s as symlink (from #{File.expand_path sym_prefix}, change by setting PATH)"
+  project_task :symlink do
+    target = File.join sym_prefix, subproject.name
+    if File.exist? subproject.name then $stderr.puts "#{subproject.name} already exists"
+    elsif not File.exist? target then $stderr.puts "#{target} does not exist"
+    else ln_sf target, subproject.name
+    end
+  end
+
+  desc "clone read-write version of %s github repo"
+  project_task(:read_write) { git_clone :private_remote }
+
+  desc "clone read-only version of %s github repo"
+  project_task(:read_only) { git_clone :public_remote }
+
+end
