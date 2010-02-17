@@ -1,0 +1,17 @@
+def git_task(name, cmd = nil)
+  cmd ||= name
+  desc "git #{name} for %s"
+  project_task(name) do
+    puts '', '#'*80, "# #{subproject.name}"
+    if File.exist? subproject.name then system "cd #{subproject.name}; git #{cmd}; cd .."
+    else $stderr.puts "# missing"
+    end
+  end
+end
+
+project_namespace :git do
+  git_task :status
+  git_task :pull, "pull --no-ff"
+  git_task :push
+  git_task :diff
+end
