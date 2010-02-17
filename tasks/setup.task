@@ -6,6 +6,12 @@ def git_clone(type)
   end
 end
 
+task :gitignore do
+  files = File.read(".gitignore").split "\n"
+  files += Subproject.names
+  File.open(".gitignore", "w") { |f| f.puts files.uniq.sort.join("\n") }
+end
+
 project_namespace :setup do
 
   desc "sets up %s as symlink (from #{File.expand_path sym_prefix}, change by setting PATH)"

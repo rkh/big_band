@@ -25,6 +25,10 @@ class Subproject < OpenStruct
     result
   end
 
+  def self.names
+    map { |p| p.name }
+  end
+
   def self.[](name)
     detect { |p| p.name == name }
   end
