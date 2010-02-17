@@ -23,4 +23,6 @@ project_namespace :setup do
   desc "clone read-only version of %s github repo"
   project_task(:read_only) { git_clone :public_remote }
 
+  project_task(:check) { raise "#{subproject.name} is missing" unless File.exist? subproject.name }
+
 end
