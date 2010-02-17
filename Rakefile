@@ -87,12 +87,8 @@ def project_task(name, klass = nil, &block)
     dependencies += Subproject.map { |p| "#{p.name}:#{name}" }
     klass, block = nil, nil
     insert_desc "all subprojects"
-    if Rake.application.last_comment and !ENV["SHOW"]
-      Rake.application.last_comment << " - run 'SHOW=1 rake -T' for subproject tasks"
-    end
   else
     insert_desc @project.name
-    desc nil unless ENV["SHOW"]
   end
   if name.to_s == "default"
     @default_desc = Rake.application.last_comment
