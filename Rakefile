@@ -3,7 +3,7 @@
 $RELATIVE_LOAD_PATH = Dir.glob '{*,.}/lib'
 $LOAD_PATH.unshift(*$RELATIVE_LOAD_PATH)
 
-task :default => "setup:all:read_only" if ENV['RUN_CODE_RUN']
+task :default => "setup:read_only" if ENV['RUN_CODE_RUN']
 task :default => ["setup:check", :spec]
 
 require 'ostruct'
