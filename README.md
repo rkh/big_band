@@ -24,3 +24,27 @@ Sinatra Tool integration
 * [monkey-lib](http://github.com/rkh/monkey-lib) – Thin layer over ruby extension libraries (like ActiveSupport) to make those pluggable
 * [Sinatra::TestHelper](http://github.com/rkh/sinatra-test-helper) – Adds helper methods and better integration for various testing frameworks
 * [Yard::Sinatra](http://github.com/rkh/yard-sinatra) – Displays Sinatra routes (including comments) in YARD output
+
+Setup via gemcutter
+-------------------
+
+Try:
+
+    gem install big_band
+
+Note: Currently this will only install BigBand 0.3.x, since 0.4 is not out yet.
+
+Running the specs / Manual setup
+--------------------------------
+
+Try something like this:
+
+    # dependencies, rather mainstream. just in case you don't have one of those.
+    gem install sinatra rspec rack-test rake
+    
+    # get the source
+    git clone git://github.com/rkh/big_band.git
+    rake setup:read_only
+    
+    # run the specs
+    rake spec
