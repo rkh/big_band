@@ -13,6 +13,7 @@ BigBand:
 * Re-implement Sinatra::BigBand
 * Create some sort of website (GitHub Pages?)
 * More documentation
+* Write example app
 
 monkey-lib:
 
@@ -52,6 +53,10 @@ After 0.4
 General:
 
 * Implement more fancy stuff
+* Padrino integration (maybe an example app, maybe some docs, dunno)
+* Monk skeleton using big\_band
+* See if stack\_helper can be extracted and is of any use (stack\_helper branch)
+* Improve inline documentation (YARD tags)
 
 Subprojects to be published:
 
