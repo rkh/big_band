@@ -33,6 +33,7 @@ class Subproject < OpenStruct
     detect { |p| p.name == name }
   end
 
+  new "haml-more"
   new "monkey-lib"
   new "sinatra-advanced-routes"
   new "sinatra-compass"
