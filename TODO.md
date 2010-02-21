@@ -11,7 +11,7 @@ All subprojects:
 BigBand:
 
 * Re-implement Sinatra::BigBand
-* Create some sore of website (GitHub Pages?)
+* Create some sort of website (GitHub Pages?)
 * More documentation
 
 monkey-lib:
