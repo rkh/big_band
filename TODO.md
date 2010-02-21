@@ -49,6 +49,10 @@ Extensions to be published or written:
 After 0.4
 ---------
 
+General:
+
+* Implement more fancy stuff
+
 Subprojects to be published:
 
 * queueba (yet another message queue based on redis)
