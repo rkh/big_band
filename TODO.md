@@ -12,6 +12,7 @@ BigBand:
 
 * Re-implement Sinatra::BigBand
 * Create some sore of website (GitHub Pages?)
+* More documentation
 
 monkey-lib:
 
