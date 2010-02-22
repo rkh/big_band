@@ -4,6 +4,7 @@ sinatra-advanced-routes
 sinatra-compass
 sinatra-config-file
 sinatra-more-server
+sinatra-namespace
 sinatra-reloader
 sinatra-sugar
 sinatra-test-helper
