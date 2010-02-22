@@ -58,7 +58,7 @@ General:
 * See if stack\_helper can be extracted and is of any use (stack\_helper branch)
 * Improve inline documentation (YARD tags)
 
-Subprojects to be published:
+Subprojects to be published or written:
 
 * queueba (yet another message queue based on redis)
 * sinatra-queueba or queueba channel for pusher
