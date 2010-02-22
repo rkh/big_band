@@ -39,6 +39,7 @@ class Subproject < OpenStruct
   new "sinatra-compass"
   new "sinatra-config-file"
   new "sinatra-more-server"
+  new "sinatra-namespace"
   new "sinatra-reloader"
   new "sinatra-sugar"
   new "sinatra-test-helper"
