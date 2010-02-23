@@ -18,7 +18,6 @@ BigBand:
 monkey-lib:
 
 * Change README format to Markdown
-* Look into runcoderun + facets issue
 
 sinatra-config-file:
 
