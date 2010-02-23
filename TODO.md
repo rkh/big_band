@@ -1,8 +1,8 @@
 TODO
 ====
 
-For 0.4 release
----------------
+For 0.4.0 release
+-----------------
 
 All subprojects:
 
@@ -46,8 +46,10 @@ Extensions to be published or written:
 * sinatra-postpone
 * sinatra-namespaces
 
-After 0.4
----------
+After 0.4.0
+-----------
+
+Most that stuff can of course, make it to 0.4.0.
 
 General:
 
@@ -56,6 +58,10 @@ General:
 * Monk skeleton using big\_band
 * See if stack\_helper can be extracted and is of any use (stack\_helper branch)
 * Improve inline documentation (YARD tags)
+
+sinatra-advanced-routes:
+
+* Make compatible with [Usher](http://github.com/joshbuddy/usher)
 
 Subprojects to be published or written:
 
