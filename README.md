@@ -18,6 +18,10 @@ Sinatra Extensions
 * [Sinatra::Sugar](http://github.com/rkh/sinatra-sugar) – Extensions for Sinatra's standard methods, like #set or #register
 * [Sinatra::WebInspector](http://github.com/rkh/sinatra-web-inspector) – Allows you to inspect a running app
 
+Besides those extensions, there are others BigBand stack, that are external:
+
+* [Rack Flash](http://github.com/nakajima/rack-flash) by Pat Nakajima
+
 Sinatra Tool integration
 ------------------------
 
