@@ -30,6 +30,15 @@ Sinatra Tool integration
 * [Sinatra::TestHelper](http://github.com/rkh/sinatra-test-helper) – Adds helper methods and better integration for various testing frameworks
 * [Yard::Sinatra](http://github.com/rkh/yard-sinatra) – Displays Sinatra routes (including comments) in YARD output
 
+Goals for 0.4.0
+---------------
+
+* No sub-project relies on BigBand
+* All sub-projects should work with MRI/REE >= 1.8.6 (including 1.9.x), JRuby >= 1.4.0 and Rubinius >= 1.0
+* Some sub-projects should work with MagLev and IronRuby (partial MacRuby support planned for later release)
+* Ease to modify the stack
+
+
 Setup via gemcutter
 -------------------
 
