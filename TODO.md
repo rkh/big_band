@@ -62,6 +62,7 @@ General:
 sinatra-advanced-routes:
 
 * Make compatible with [Usher](http://github.com/joshbuddy/usher)
+* Make compatible with [padrino-core/routing](http://github.com/padrino/padrino-framework/issues/issue/46)
 
 Subprojects to be published or written:
 
