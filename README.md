@@ -38,7 +38,6 @@ Goals for 0.4.0
 * Some sub-projects should work with MagLev and IronRuby (partial MacRuby support planned for later release)
 * Ease to modify the stack
 
-
 Setup via gemcutter
 -------------------
 

@@ -15,6 +15,10 @@ BigBand:
 * More documentation
 * Write example app
 
+haml-more:
+
+* specs
+
 monkey-lib:
 
 * Change README format to Markdown
@@ -68,4 +72,16 @@ Subprojects to be published or written:
 
 * queueba (yet another message queue based on redis)
 * sinatra-queueba or queueba channel for pusher
+
+Before 0.5.0
+------------
+
+BigBand:
+
+* remove `::BigBand`
+
+monkey-lib:
+
+* remove `Object#metaclass`
+* remove `Object#metaclass_eval`
 
