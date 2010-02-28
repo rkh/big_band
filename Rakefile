@@ -6,6 +6,10 @@ $LOAD_PATH.unshift(*$RELATIVE_LOAD_PATH)
 task :default => "setup:read_only" if ENV['RUN_CODE_RUN']
 task :default => ["setup:check", :spec]
 
+require "rake/clean"
+CLEAN.include "**/*.rbc"
+CLOBBER.include "*.gem"
+
 require 'ostruct'
 class Subproject < OpenStruct
   extend Enumerable
@@ -85,13 +89,13 @@ def subproject_block(project)
   end
 end
 
-def project_task(name, klass = nil, &block)
-  return project_namespace { project_task(name, klass, &block) } unless @project
+def project_task(name, &block)
+  return project_namespace { project_task(name, &block) } unless @project
   name, dependencies = name.first if name.is_a? Hash
   dependencies = [dependencies].flatten.compact
   if @project == :all
     dependencies += Subproject.map { |p| "#{p.name}:#{name}" }
-    klass, block = nil, nil
+    block = nil
     insert_desc "all subprojects"
   else
     insert_desc @project.name
@@ -100,10 +104,7 @@ def project_task(name, klass = nil, &block)
     @default_desc = Rake.application.last_comment
     desc nil
   end
-  task name => dependencies
-  if klass then klass.new(name, &subproject_block(@project, &block))
-  else task(name, &subproject_block(@project, &block))
-  end
+  task({name => dependencies}, &subproject_block(@project, &block))
 end
 
 Dir.glob("tasks/*.task").sort.each do |file|
