@@ -1,17 +1,16 @@
-def rspec(pattern, ruby = RUBY)
+def rspec(pattern, format = :progress, more_opts = nil, ruby = RUBY)
   libs  = Dir.glob("{*,.}/lib").join File::PATH_SEPARATOR
   files = Dir.glob(pattern).map { |f| f.inspect }.join " "
-  opts  = "-b -c --format progress --loadby mtime --reverse"
+  opts  = ["-b -c --format #{format} --loadby mtime --reverse", *more_opts].compact.join " "
   sh "#{ruby} -I#{libs} -S spec #{opts} #{files}"
 end
 
 project_namespace :spec do
   desc "run specs for %s"
-  project_task :default do |t|
-    rspec("#{subproject.name}/spec/**/*_spec.rb")
+  project_task :default => :clobber do |t|
+    rspec "#{subproject.name}/spec/**/*_spec.rb"
   end
 end
 
-task :spec do
-  rspec("*/spec/**/*_spec.rb")
-end
+desc "run all specs"
+task(:spec) { rspec "*/spec/**/*_spec.rb" }
