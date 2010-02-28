@@ -1,0 +1,9 @@
+begin
+  require "yard"
+  YARD::Rake::YardocTask.new(:doc) do |t|
+    t.files = ["{*,.}/lib/**/*.rb", "{**,.}/*.md"]
+    t.options = %w[--protected --private --title BigBand --readme README.md --output-dir doc --backtrace]
+  end
+rescue LoadError
+  task(:doc) { raise "please install yard for doc generation" }
+end
