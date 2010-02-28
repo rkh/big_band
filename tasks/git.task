@@ -9,9 +9,25 @@ def git_task(name, cmd = nil)
   end
 end
 
+namespace :git do
+  namespace :big_band do
+    task(:header) { puts '', '#'*80, "# BigBand" }
+    task(:status => :header) { system "git status"       }
+    task(:pull   => :header) { system "git pull --no-ff" }
+    task(:push   => :header) { system "git push"         }
+    task(:diff   => :header) { system "git diff"         }
+  end
+  task :status => "big_band:status"
+  task :pull   => "big_band:pull"
+  task :push   => "big_band:push"
+  task :diff   => "big_band:diff"
+end
+
 project_namespace :git do
   git_task :status
   git_task :pull, "pull --no-ff"
   git_task :push
   git_task :diff
 end
+
+
