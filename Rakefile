@@ -91,7 +91,7 @@ end
 
 def project_task(name, &block)
   return project_namespace { project_task(name, &block) } unless @project
-  name, dependencies = name.first if name.is_a? Hash
+  name, dependencies = name.to_a.first if name.is_a? Hash
   dependencies = [dependencies].flatten.compact
   if @project == :all
     dependencies += Subproject.map { |p| "#{p.name}:#{name}" }
