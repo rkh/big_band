@@ -14,6 +14,7 @@ Sinatra Extensions
 * [Sinatra::Compass](http://github.com/rkh/sinatra-compass) – Integrates the Compass stylesheet framework
 * [Sinatra::ConfigFile](http://github.com/rkh/sinatra-config-file) – Adds YAML config file support
 * [Sinatra::MoreServer](http://github.com/rkh/sinatra-more-server) – Adds support for more web servers to Sinatra::Base#run!
+* [Sinatra::Namespace](http://github.com/rkh/sinatra-more-server) – Adds namespaces, allows namespaces to have local helpers.
 * [Sinatra::Reloader](http://github.com/rkh/sinatra-reloader) – Advanced and fast code reloader
 * [Sinatra::Sugar](http://github.com/rkh/sinatra-sugar) – Extensions for Sinatra's standard methods, like #set or #register
 * [Sinatra::WebInspector](http://github.com/rkh/sinatra-web-inspector) – Allows you to inspect a running app
