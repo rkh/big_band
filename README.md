@@ -61,3 +61,6 @@ Try something like this:
     
     # run the specs
     rake spec
+    
+    # run with multiple ruby implementations using rvm
+    rvm specs ree,1.9.1,rbx,jruby
