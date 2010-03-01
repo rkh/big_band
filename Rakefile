@@ -8,7 +8,7 @@ task :default => ["setup:check", :spec]
 
 require "rake/clean"
 CLEAN.include "**/*.rbc"
-CLOBBER.include "*.gem"
+CLOBBER.include "*.gem", "doc"
 
 require 'ostruct'
 class Subproject < OpenStruct
