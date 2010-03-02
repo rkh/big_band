@@ -35,11 +35,6 @@ sinatra-web-inspector:
 
 * check dependency stuff, add some css
 
-yard-sinatra:
-
-* add gemspec (see master branch)
-* add readme
-
 Extensions to be extracted:
 
 * Integration for Rake and Monk/Thor
@@ -48,7 +43,6 @@ Extensions to be extracted:
 Extensions to be published or written:
 
 * sinatra-postpone
-* sinatra-namespaces
 
 After 0.4.0
 -----------
