@@ -1,6 +1,0 @@
-#!/usr/bin/env ruby
-
-require "pathname"
-$LOAD_PATH.unshift Pathname(__FILE__).realpath.join('../../lib').expand_path.to_s
-require "sinatra/big_band/cli"
-Sinatra::BigBand::CLI.run
