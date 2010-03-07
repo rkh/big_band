@@ -37,6 +37,7 @@ class Subproject < OpenStruct
     detect { |p| p.name == name }
   end
 
+  new "async-rack"
   new "haml-more"
   new "monkey-lib"
   new "sinatra-advanced-routes"
