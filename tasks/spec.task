@@ -1,4 +1,5 @@
-def rspec(pattern, format = :progress, more_opts = nil, ruby = RUBY)
+def rspec(pattern, format = nil, more_opts = nil, ruby = RUBY)
+  format ||= ENV["FORMAT"] || :progress
   libs  = Dir.glob("{*,.}/lib").join File::PATH_SEPARATOR
   files = Dir.glob(pattern).map { |f| f.inspect }.join " "
   opts  = ["-b -c --format #{format} --loadby mtime --reverse", *more_opts].compact.join " "
