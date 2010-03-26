@@ -17,7 +17,6 @@ describe Sinatra::BigBand do
         before { @ext_name = ext_name }
 
         def extension
-          pending
           extension = Sinatra.const_get @ext_name
         end
 
