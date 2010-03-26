@@ -1,3 +1,5 @@
+async-rack
+doc
 haml-more
 monkey-lib
 sinatra-advanced-routes
@@ -10,4 +12,3 @@ sinatra-sugar
 sinatra-test-helper
 sinatra-web-inspector
 yard-sinatra
-doc
