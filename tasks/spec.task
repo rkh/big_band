@@ -5,12 +5,19 @@ def rspec(pattern, format = :progress, more_opts = nil, ruby = RUBY)
   sh "#{ruby} -I#{libs} -S spec #{opts} #{files}"
 end
 
+pattern = "spec/**/*_spec.rb"
+
 project_namespace :spec do
   desc "run specs for %s"
   project_task :default => :clobber do |t|
-    rspec "#{subproject.name}/spec/**/*_spec.rb"
+    rspec "#{subproject.name}/#{pattern}"
   end
 end
 
 desc "run all specs"
-task(:spec) { rspec "*/spec/**/*_spec.rb" }
+task(:spec) { rspec "{*,.}/#{pattern}" }
+
+namespace :spec do
+  desc "run only specs for big_band meta project"
+  task(:big_band) { rspec pattern }
+end
