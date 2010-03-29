@@ -11,38 +11,48 @@ module Sinatra
       @subclass_extensions ||= {}
     end
 
-    def self.extension(path, development_only = false, parent = Sinatra)
+    def self.subclass_extension(path, development_only = false, parent = Sinatra, &block)
       name = path.to_s.split('_').map { |e| e.capitalize }.join.to_sym
-      subclass_extensions[name] ||= [parent, name, development_only]
+      subclass_extensions[name] ||= [parent, name, development_only, block]
       parent.autoload name, "#{parent.name.downcase}/#{path}"
     end
 
-    extension :advanced_routes
-    extension :compass
-    extension :config_file
-    extension :more_server
-    extension :namespace
-    extension :reloader, true
-    extension :sugar
-    extension :web_inspector, true
+    subclass_extension :advanced_routes
+    subclass_extension :compass
+    subclass_extension :config_file
+    subclass_extension :more_server
+    subclass_extension :namespace
+    subclass_extension :reloader, true
+    subclass_extension :sugar
+    subclass_extension :web_inspector, true
+
+    def self.apply_options(klass)
+      klass.set :app_file, klass.caller_files.first.expand_path unless klass.app_file?
+      klass.set :haml, :format => :html5, :escape_html => true
+      enable :sessions
+    end
+
+    def self.subclass_for(list)
+      @subclasses ||= {}
+      @subclasses[list] ||= Class.new(self) do
+        define_singleton_method(:inherited) do |klass|
+          super klass
+          list.each { |block| block.call klass }
+          apply_options klass
+        end
+      end
+    end
 
     def self.generate_subclass(options = {})
       options[:except] ||= []
       options.keys.each { |k| raise ArgumentError, "unkown option #{k.inspect}" unless k == :except }
       options[:except] = [*options[:except]]
-      list = subclass_extensions.inject [] do |chosen, (ident, (parent, name, dev))|
+      list = subclass_extensions.inject([]) do |chosen, (ident, (parent, name, dev))|
         next chosen if options[:except].include? ident or (dev and not development?)
-        chosen << parent.const_get(name)
+        extension = parent.const_get name
+        chosen << proc { |klass| klass.register extension }
       end
-      @subclasses ||= {}
-      @subclasses[list] ||= Class.new(self) do
-        define_singleton_method(:inherited) do |klass|
-          super klass
-          list.each { |e| klass.register e }
-          klass.set :app_file, klass.caller_files.first.expand_path unless klass.app_file?
-          klass.set :haml, :format => :html5, :escape_html => true
-        end
-      end
+      subclass_for list
     end
   end
 
