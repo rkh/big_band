@@ -39,10 +39,6 @@ Extensions to be extracted:
 * Integration for Rake and Monk/Thor
 * Compass framework big\_band
 
-Extensions to be published or written:
-
-* sinatra-postpone
-
 After 0.4.0
 -----------
 
@@ -64,7 +60,8 @@ sinatra-advanced-routes:
 Subprojects to be published or written:
 
 * queueba (yet another message queue based on redis)
-* sinatra-queueba or queueba channel for pusher
+* sinatra-postpone
+* "sinatra-queueba" or redis channel for pusher + pusher integration for sinatra
 
 Before 0.5.0
 ------------
