@@ -10,7 +10,6 @@ All subprojects:
 
 BigBand:
 
-* Re-implement Sinatra::BigBand
 * Create some sort of website (GitHub Pages?)
 * More documentation
 * Write example app
