@@ -26,10 +26,6 @@ sinatra-config-file:
 
 * Write some specs
 
-sinatra-test-helper:
-
-* maybe add gemspecs for sinatra-rspec and such (not sure about that one)
-
 sinatra-web-inspector:
 
 * check dependency stuff, add some css
