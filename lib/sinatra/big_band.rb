@@ -28,6 +28,8 @@ module Sinatra
 
     def self.generate_subclass(options = {})
       options[:except] ||= []
+      options.keys.each { |k| raise ArgumentError, "unkown option #{k.inspect}" unless k == :except }
+      options[:except] = [*options[:except]]
       list = subclass_extensions.inject [] do |chosen, (ident, (parent, name, dev))|
         next chosen if options[:except].include? ident or (dev and not development?)
         chosen << parent.const_get(name)
