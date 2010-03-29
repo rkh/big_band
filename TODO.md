@@ -55,7 +55,7 @@ sinatra-advanced-routes:
 
 Subprojects to be published or written:
 
-* queueba (yet another message queue based on redis)
+* queueba (yet another message queue based on redis, maybe)
 * sinatra-postpone
 * "sinatra-queueba" or redis channel for pusher + pusher integration for sinatra
 
