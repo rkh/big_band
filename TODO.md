@@ -22,6 +22,10 @@ monkey-lib:
 
 * Change README format to Markdown
 
+sinatra-compass:
+
+* Implement #stylesheet
+
 sinatra-config-file:
 
 * Write some specs
