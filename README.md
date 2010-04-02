@@ -7,8 +7,10 @@ each of available as a separate gem. All BigBand extensions follow the same rele
 Note: The list below are libraries, that already have been extracted from the BigBand master branch. More will follow.
 With the release of BigBand 0.4.0 this branch will become the new master branch.
 
+The BigBand Stack
+-----------------
+
 Sinatra Extensions
-------------------
 
 * [Sinatra::AdvancedRoutes](http://github.com/rkh/sinatra-advanced-routes) – Makes routes first class objects
 * [Sinatra::Compass](http://github.com/rkh/sinatra-compass) – Integrates the Compass stylesheet framework
@@ -19,18 +21,17 @@ Sinatra Extensions
 * [Sinatra::Sugar](http://github.com/rkh/sinatra-sugar) – Extensions for Sinatra's standard methods, like #set or #register
 * [Sinatra::WebInspector](http://github.com/rkh/sinatra-web-inspector) – Allows you to inspect a running app
 
-Besides those extensions, there are others in the BigBand stack, that are external:
-
-* [Rack Flash](http://github.com/nakajima/rack-flash) by Pat Nakajima
-
-Sinatra Tool integration
-------------------------
+Sinatra tool integration:
 
 * [AsyncRack](http://github.com/rkh/async-rack) – Makes standard rack middleware play nice with `async.callback`
 * [Haml::More](http://github.com/rkh/haml-more) – Adds more functionality to Haml and Sass
 * [monkey-lib](http://github.com/rkh/monkey-lib) – Thin layer over ruby extension libraries (like ActiveSupport) to make those pluggable
 * [Sinatra::TestHelper](http://github.com/rkh/sinatra-test-helper) – Adds helper methods and better integration for various testing frameworks
 * [Yard::Sinatra](http://github.com/rkh/yard-sinatra) – Displays Sinatra routes (including comments) in YARD output
+
+Besides those extensions, there are others in the BigBand stack, that are external:
+
+* [Rack Flash](http://github.com/nakajima/rack-flash) by Pat Nakajima
 
 Goals for 0.4.0
 ---------------
