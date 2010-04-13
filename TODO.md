@@ -14,30 +14,14 @@ BigBand:
 * More documentation
 * Write example app
 
-haml-more:
-
-* specs
-
-monkey-lib:
-
-* Change README format to Markdown
-
 sinatra-compass:
 
 * Implement #stylesheet
 
-sinatra-config-file:
-
-* Write some specs
-
 sinatra-web-inspector:
 
 * check dependency stuff, add some css
-
-Extensions to be extracted:
-
-* Integration for Rake and Monk/Thor
-* Compass framework big\_band
+* OR: remove project
 
 After 0.4.0
 -----------
