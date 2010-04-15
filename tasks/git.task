@@ -16,11 +16,13 @@ namespace :git do
     task(:pull   => :header) { system "git pull --no-ff" }
     task(:push   => :header) { system "git push"         }
     task(:diff   => :header) { system "git diff"         }
+    task(:tags   => :header) { system "git push --tags"  }
   end
   task :status => "big_band:status"
   task :pull   => "big_band:pull"
   task :push   => "big_band:push"
   task :diff   => "big_band:diff"
+  task :tags   => "big_band:tags"
 end
 
 project_namespace :git do
@@ -28,6 +30,5 @@ project_namespace :git do
   git_task :pull, "pull --no-ff"
   git_task :push
   git_task :diff
+  git_task :tags, "push --tags"
 end
-
-
