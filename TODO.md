@@ -14,6 +14,10 @@ BigBand:
 * More documentation
 * Write example app
 
+haml-more:
+
+* check compatibility with sass 3
+
 sinatra-compass:
 
 * Implement #stylesheet
