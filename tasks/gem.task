@@ -5,6 +5,6 @@ project_namespace :gem do
   project_task(:build) { sh "cd #{subproject.name} && gem build *.gemspec && cd .." }
   desc "publish gems"
   project_task :publish => [:clear, :build] do
-    sh "cd #{subproject.name} && gem push *.gem && cd .."
+    system "cd #{subproject.name} && gem push *.gem && cd .."
   end
 end
