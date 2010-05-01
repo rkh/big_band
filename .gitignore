@@ -10,5 +10,4 @@ sinatra-namespace
 sinatra-reloader
 sinatra-sugar
 sinatra-test-helper
-sinatra-web-inspector
 yard-sinatra

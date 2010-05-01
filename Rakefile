@@ -48,7 +48,6 @@ class Subproject < OpenStruct
   new "sinatra-reloader"
   new "sinatra-sugar"
   new "sinatra-test-helper"
-  new "sinatra-web-inspector"
   new "yard-sinatra"
 
 end

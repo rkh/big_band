@@ -24,7 +24,6 @@ module Sinatra
     subclass_extension :namespace
     subclass_extension :reloader, true
     subclass_extension :sugar
-    subclass_extension :web_inspector, true
 
     def self.apply_options(klass)
       klass.set :app_file, klass.caller_files.first.expand_path unless klass.app_file?

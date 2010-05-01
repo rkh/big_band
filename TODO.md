@@ -22,15 +22,8 @@ sinatra-compass:
 
 * Implement #stylesheet
 
-sinatra-web-inspector:
-
-* check dependency stuff, add some css
-* OR: remove project
-
 After 0.4.0
 -----------
-
-Most that stuff can of course, make it to 0.4.0.
 
 General:
 
