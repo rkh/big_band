@@ -18,10 +18,6 @@ haml-more:
 
 * check compatibility with sass 3
 
-sinatra-compass:
-
-* Implement #stylesheet
-
 After 0.4.0
 -----------
 
