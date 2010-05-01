@@ -1,4 +1,5 @@
 def git_task(name, cmd = nil)
+  cmd ||= yield if block_given?
   cmd ||= name
   desc "git #{name} for %s"
   project_task(name) do
@@ -9,6 +10,10 @@ def git_task(name, cmd = nil)
   end
 end
 
+def commit
+  "commit -a -m #{ENV['message'].inspect}"
+end
+
 namespace :git do
   namespace :big_band do
     task(:header) { puts '', '#'*80, "# BigBand" }
@@ -17,6 +22,7 @@ namespace :git do
     task(:push   => :header) { system "git push"         }
     task(:diff   => :header) { system "git diff"         }
     task(:tags   => :header) { system "git push --tags"  }
+    task(:commit => :header) { system "git #{commit}"    }
   end
   task :status => "big_band:status"
   task :pull   => "big_band:pull"
@@ -31,4 +37,5 @@ project_namespace :git do
   git_task :push
   git_task :diff
   git_task :tags, "push --tags"
+  git_task(:commit) { commit }
 end
