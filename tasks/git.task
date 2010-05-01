@@ -11,7 +11,7 @@ def git_task(name, cmd = nil)
 end
 
 def commit
-  "commit -a -m #{ENV['message'].inspect}"
+  "commit -a -m #{ENV['message'].to_s.inspect}"
 end
 
 namespace :git do
