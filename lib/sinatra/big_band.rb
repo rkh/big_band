@@ -31,9 +31,11 @@ module Sinatra
       enable :sessions
     end
 
-    def self.subclass_for(list)
+    def self.subclass_for(list, inspection = nil)
       @subclasses ||= {}
       @subclasses[list] ||= Class.new(self) do
+        @inspection = inspection
+        define_singleton_method(:inspect) { @inspection || super() }
         define_singleton_method(:inherited) do |klass|
           super klass
           list.each { |block| block.call klass }
@@ -51,7 +53,7 @@ module Sinatra
         extension = parent.const_get name
         chosen << proc { |klass| klass.register extension }
       end
-      subclass_for list
+      subclass_for list, "#{self}(#{options.inspect[1..-2]})"
     end
   end
 
