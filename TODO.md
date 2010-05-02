@@ -11,12 +11,7 @@ All subprojects:
 BigBand:
 
 * Create some sort of website (GitHub Pages?)
-* More documentation
 * Write example app
-
-haml-more:
-
-* check compatibility with sass 3
 
 After 0.4.0
 -----------
@@ -28,6 +23,7 @@ General:
 * Monk skeleton using big\_band
 * See if stack\_helper can be extracted and is of any use (stack\_helper branch)
 * Improve inline documentation (YARD tags)
+* Maybe switch to [sinatra-flash](http://github.com/SFEley/sinatra-flash)
 
 sinatra-advanced-routes:
 
