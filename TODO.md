@@ -1,18 +1,12 @@
 TODO
 ====
 
-For 0.4.0 release
------------------
-
-BigBand:
-
-* Create some sort of website (GitHub Pages?)
-
 After 0.4.0
 -----------
 
 General:
 
+* Create some sort of website (GitHub Pages?)
 * Implement more fancy stuff
 * Padrino integration (maybe an example app, maybe some docs, dunno)
 * Monk skeleton using big\_band
