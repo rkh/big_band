@@ -9,6 +9,7 @@ SPEC = Gem::Specification.new do |s|
 
   # BigBand depedencies
   Subproject.each { |p| s.add_dependency p.name, "~> #{s.version}" }
+  s.add_dependency 'rack-flash', '>= 0.1.1'
 
   # External dependencies
   s.add_development_dependency "rspec", ">= 1.3.0"
@@ -20,5 +21,5 @@ SPEC = Gem::Specification.new do |s|
   s.has_rdoc         = 'yard'
   s.homepage         = "http://github.com/rkh/#{s.name}"
   s.require_paths    = ["lib"]
-  s.summary          = s.description  
+  s.summary          = s.description
 end

@@ -1,7 +1,8 @@
 require 'sinatra/base'
-require "sinatra/sugar"
+require 'sinatra/sugar'
 require 'async-rack'
 require 'monkey'
+require 'rack/flash'
 
 module Sinatra
   Base.ignore_caller
@@ -14,7 +15,7 @@ module Sinatra
     def self.subclass_extension(path, development_only = false, parent = Sinatra, &block)
       name = path.to_s.split('_').map { |e| e.capitalize }.join.to_sym
       subclass_extensions[name] ||= [parent, name, development_only, block]
-      parent.autoload name, "#{parent.name.downcase}/#{path}"
+      parent.autoload name, "#{parent.name.downcase}/#{path}" if parent
     end
 
     subclass_extension :advanced_routes
@@ -24,6 +25,7 @@ module Sinatra
     subclass_extension :namespace
     subclass_extension :reloader, true
     subclass_extension :sugar
+    subclass_extension(:flash, false, false) { |klass| klass.use Rack::Flash, :flash_app_class => klass }
 
     def self.apply_options(klass)
       klass.set :app_file, klass.caller_files.first.expand_path unless klass.app_file?
