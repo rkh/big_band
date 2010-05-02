@@ -1,5 +1,5 @@
 $LOAD_PATH.unshift '.'
-require 'subprojects'
+require 'subproject'
 
 SPEC = Gem::Specification.new do |s|
   # Get the facts.
