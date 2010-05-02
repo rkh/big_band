@@ -28,7 +28,7 @@ module Sinatra
     def self.apply_options(klass)
       klass.set :app_file, klass.caller_files.first.expand_path unless klass.app_file?
       klass.set :haml, :format => :html5, :escape_html => true
-      enable :sessions
+      enable :sessions, :method_override, :show_exceptions
     end
 
     def self.subclass_for(list, inspection = nil)
@@ -48,10 +48,10 @@ module Sinatra
       options[:except] ||= []
       options.keys.each { |k| raise ArgumentError, "unkown option #{k.inspect}" unless k == :except }
       options[:except] = [*options[:except]]
-      list = subclass_extensions.inject([]) do |chosen, (ident, (parent, name, dev))|
+      list = subclass_extensions.inject([]) do |chosen, (ident, (parent, name, dev, block))|
         next chosen if options[:except].include? ident or (dev and not development?)
-        extension = parent.const_get name
-        chosen << proc { |klass| klass.register extension }
+        block ||= proc { |klass| klass.register parent.const_get(name) }
+        chosen << block
       end
       subclass_for list, "#{self}(#{options.inspect[1..-2]})"
     end
