@@ -1,7 +1,9 @@
 # see tasks/*.task for rake tasks
 
 $RELATIVE_LOAD_PATH = Dir.glob '{*,.}/lib'
-$LOAD_PATH.unshift(*$RELATIVE_LOAD_PATH)
+$LOAD_PATH.unshift('.', *$RELATIVE_LOAD_PATH)
+
+require 'subproject'
 
 task :default => "setup:read_only" if ENV['RUN_CODE_RUN']
 task :default => ["setup:check", :spec]
@@ -9,48 +11,6 @@ task :default => ["setup:check", :spec]
 require "rake/clean"
 CLEAN.include "**/*.rbc"
 CLOBBER.include "*.gem", "doc"
-
-require 'ostruct'
-class Subproject < OpenStruct
-  extend Enumerable
-  @list ||= []
-
-  def self.each(&block)
-    @list.each(&block)
-  end
-
-  def self.new(name, options = {})
-    options[:public_remote]  ||= "git://github.com/rkh/#{name}.git"
-    options[:private_remote] ||= "git@github.com:rkh/#{name}.git"
-    options.merge! :name => name
-    result = super options
-    yield result if block_given?
-    @list << result
-    result
-  end
-
-  def self.names
-    map { |p| p.name }
-  end
-
-  def self.[](name)
-    detect { |p| p.name == name }
-  end
-
-  new "async-rack"
-  new "haml-more"
-  new "monkey-lib"
-  new "sinatra-advanced-routes"
-  new "sinatra-compass"
-  new "sinatra-config-file"
-  new "sinatra-more-server"
-  new "sinatra-namespace"
-  new "sinatra-reloader"
-  new "sinatra-sugar"
-  new "sinatra-test-helper"
-  new "yard-sinatra"
-
-end
 
 def insert_desc(*values)
   return unless Rake.application.last_comment
