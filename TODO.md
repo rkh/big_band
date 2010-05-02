@@ -4,14 +4,9 @@ TODO
 For 0.4.0 release
 -----------------
 
-All subprojects:
-
-* Add licenses, deps.rip, maybe dependencies file for monk
-
 BigBand:
 
 * Create some sort of website (GitHub Pages?)
-* Write example app
 
 After 0.4.0
 -----------
