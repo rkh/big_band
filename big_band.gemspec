@@ -10,6 +10,7 @@ SPEC = Gem::Specification.new do |s|
   # BigBand depedencies
   Subproject.each { |p| s.add_dependency p.name, "~> #{s.version}" }
   s.add_dependency 'rack-flash', '>= 0.1.1'
+  s.add_dependency 'sinatra-default_charset', '>= 0.2.0'
 
   # External dependencies
   s.add_development_dependency "rspec", ">= 1.3.0"

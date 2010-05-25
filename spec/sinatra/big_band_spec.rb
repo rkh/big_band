@@ -14,7 +14,7 @@ describe Sinatra::BigBand do
 
   describe "standard extensions" do
     def extension; Sinatra.const_get @ext_name end
-    [:AdvancedRoutes, :Compass, :ConfigFile, :MoreServer, :Namespace, :Sugar].each do |ext_name|
+    [:AdvancedRoutes, :Compass, :ConfigFile, :MoreServer, :Namespace, :Sugar, :DefaultCharset].each do |ext_name|
       describe ext_name do
         before { @ext_name = ext_name }
         it("should be loaded") { Sinatra.should be_const_defined(ext_name) }
@@ -22,7 +22,7 @@ describe Sinatra::BigBand do
       end
     end
 
-    [:Compass, :ConfigFile, :MoreServer, :Namespace].each do |ext_name|
+    [:Compass, :ConfigFile, :MoreServer, :Namespace, :DefaultCharset].each do |ext_name|
       describe ext_name do
         before { @ext_name = ext_name }
         it("should be excludable") { example_app(:except => ext_name).should_not be_a(extension) }

@@ -46,7 +46,8 @@ Sinatra tool integration:
 
 Besides those extensions, there are others in the BigBand stack, that are external:
 
-* [Rack Flash](http://github.com/nakajima/rack-flash) by Pat Nakajima
+* [Rack Flash](http://github.com/nakajima/rack-flash) by [Pat Nakajima](http://github.com/nakajima)
+* [Sinatra::DefaultCharset](http://github.com/raggi/sinatra-default_charset) by [James Tucker](http://github.com/raggi)
 
 Goals for 0.4.0
 ---------------

@@ -2,7 +2,6 @@ require 'sinatra/base'
 require 'sinatra/sugar'
 require 'async-rack'
 require 'monkey'
-require 'rack/flash'
 
 module Sinatra
   Base.ignore_caller
@@ -25,7 +24,17 @@ module Sinatra
     subclass_extension :namespace
     subclass_extension :reloader, true
     subclass_extension :sugar
-    subclass_extension(:flash, false, false) { |klass| klass.use Rack::Flash, :flash_app_class => klass }
+
+    subclass_extension(:flash, false, false) do |klass|
+      require 'rack/flash'
+      klass.use Rack::Flash, :flash_app_class => klass
+    end
+
+    subclass_extension(:default_charset, false, false) do |klass|
+      # FIXME: Does not work with autoloader?!
+      require 'sinatra/default_charset'
+      klass.register Sinatra::DefaultCharset
+    end
 
     def self.apply_options(klass)
       klass.set :app_file, klass.caller_files.first.expand_path unless klass.app_file?
