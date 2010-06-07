@@ -12,6 +12,11 @@ describe Sinatra::BigBand do
     @example_app ||= set_example_app options
   end
 
+  describe 'sinatra behavior' do
+    before { app set_example_app }
+    it_should_behave_like 'sinatra'
+  end
+
   describe "standard extensions" do
     def extension; Sinatra.const_get @ext_name end
     [:AdvancedRoutes, :Compass, :ConfigFile, :MoreServer, :Namespace, :Sugar, :DefaultCharset].each do |ext_name|
