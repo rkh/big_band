@@ -32,6 +32,7 @@ class Subproject < OpenStruct
   new "sinatra-advanced-routes"
   new "sinatra-compass"
   new "sinatra-config-file"
+  new "sinatra-extension"
   new "sinatra-more-server"
   new "sinatra-namespace"
   new "sinatra-reloader"

@@ -42,6 +42,7 @@ Sinatra tool integration:
 * [Haml::More](http://github.com/rkh/haml-more) – Adds more functionality to Haml and Sass
 * [monkey-lib](http://github.com/rkh/monkey-lib) – Thin layer over ruby extension libraries (like ActiveSupport) to make those pluggable
 * [Sinatra::TestHelper](http://github.com/rkh/sinatra-test-helper) – Adds helper methods and better integration for various testing frameworks
+* [Sinatra::Extension](http://github.com/rkh/sinatra-extension) – Mixin to ease Sinatra extension development.
 * [Yard::Sinatra](http://github.com/rkh/yard-sinatra) – Displays Sinatra routes (including comments) in YARD output
 
 Besides those extensions, there are others in the BigBand stack, that are external:

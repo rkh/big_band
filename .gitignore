@@ -5,6 +5,7 @@ monkey-lib
 sinatra-advanced-routes
 sinatra-compass
 sinatra-config-file
+sinatra-extension
 sinatra-more-server
 sinatra-namespace
 sinatra-reloader
