@@ -8,29 +8,12 @@ General:
 
 * Create some sort of website (GitHub Pages?)
 * Implement more fancy stuff
-* Padrino integration (maybe an example app, maybe some docs, dunno)
-* Monk skeleton using big\_band
-* See if stack\_helper can be extracted and is of any use (stack\_helper branch)
 * Improve inline documentation (YARD tags)
 * Maybe switch to [sinatra-flash](http://github.com/SFEley/sinatra-flash)
 
-sinatra-advanced-routes:
+haml-more:
 
-* Make compatible with [Usher](http://github.com/joshbuddy/usher)
-* Make compatible with [padrino-core/routing](http://github.com/padrino/padrino-framework/issues/issue/46)
-
-Subprojects to be published or written:
-
-* queueba (yet another message queue based on redis, maybe)
-* sinatra-postpone
-* "sinatra-queueba" or redis channel for pusher + pusher integration for sinatra
-
-Before 0.5.0
-------------
-
-BigBand:
-
-* remove `::BigBand`
+* Rewrite Haml::More::CoffeeScript
 
 monkey-lib:
 
