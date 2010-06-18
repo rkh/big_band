@@ -1,7 +1,7 @@
 require 'sinatra/base'
 require 'sinatra/sugar'
 require 'async-rack'
-require 'monkey'
+require 'monkey-lib'
 
 module Sinatra
   Base.ignore_caller
