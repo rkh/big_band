@@ -1,9 +1,10 @@
-def rspec(pattern, format = nil, more_opts = nil, ruby = RUBY)
+def rspec(pattern, format = nil, more_opts = nil, ruby = RUBY, command = 'spec')
   format ||= ENV["FORMAT"] || :progress
   libs  = Dir.glob("{*,.}/lib").join File::PATH_SEPARATOR
   files = Dir.glob(pattern).map { |f| f.inspect }.join " "
   opts  = ["-b -c --format #{format} --loadby mtime --reverse", *more_opts].compact.join " "
-  sh "#{ruby} -I#{libs} -S spec #{opts} #{files}"
+  command = "bundle exec #{command}" if ENV['BUNDLER']
+  sh "RUBYLIB=#{libs}:#{ENV['RUBYLIB']} #{ruby} -S #{command} #{opts} #{files}"
 end
 
 pattern = "spec/**/*_spec.rb"
