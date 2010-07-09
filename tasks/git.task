@@ -14,6 +14,10 @@ def commit
   "commit -a -m #{ENV['message'].to_s.inspect}"
 end
 
+def tag
+  "tag -a #{ENV['tag'].to_s.inspect} -m #{ENV['tag'].to_s.inspect}"
+end
+
 namespace :git do
   namespace :big_band do
     task(:header) { puts '', '#'*80, "# BigBand" }
@@ -23,6 +27,7 @@ namespace :git do
     task(:diff   => :header) { system "git diff"         }
     task(:tags   => :header) { system "git push --tags"  }
     task(:commit => :header) { system "git #{commit}"    }
+    task(:tag    => :header) { system "git #{tag}"       }
   end
   task :status => "big_band:status"
   task :pull   => "big_band:pull"
@@ -38,4 +43,5 @@ project_namespace :git do
   git_task :diff
   git_task :tags, "push --tags"
   git_task(:commit) { commit }
+  git_task(:tag) { tag }
 end

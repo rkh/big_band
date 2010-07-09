@@ -4,7 +4,7 @@ require 'subproject'
 SPEC = Gem::Specification.new do |s|
   # Get the facts.
   s.name             = "big_band"
-  s.version          = "0.4.0"
+  s.version          = "0.5.0"
   s.description      = "Making Sinatra swing."
 
   # BigBand depedencies

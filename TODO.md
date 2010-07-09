@@ -1,9 +1,6 @@
 TODO
 ====
 
-After 0.4.0
------------
-
 General:
 
 * Create some sort of website (GitHub Pages?)
