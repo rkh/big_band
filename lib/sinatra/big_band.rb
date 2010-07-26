@@ -1,74 +1,35 @@
-require 'sinatra/base'
-require 'sinatra/sugar'
 require 'async-rack'
 require 'monkey-lib'
+require 'rack/flash'
+require 'sinatra/base'
+require 'sinatra/sugar'
+require 'sinatra/advanced_routes'
+require 'sinatra/compass'
+require 'sinatra/config_file'
+require 'sinatra/default_charset'
+require 'sinatra/more_server'
+require 'sinatra/namespace'
 
 module Sinatra
   Base.ignore_caller
-
   class BigBand < Base
-    def self.subclass_extensions
-      @subclass_extensions ||= {}
+    use Rack::Flash, :flash_app_class => self
+
+    register Sinatra::Sugar
+    register Sinatra::AdvancedRoutes
+    register Sinatra::Compass
+    register Sinatra::ConfigFile
+    register Sinatra::DefaultCharset
+    register Sinatra::MoreServer
+    register Sinatra::Namespace
+
+    configure(:development) do
+      require 'sinatra/reloader'
+      register Sinatra::Reloader
     end
 
-    def self.subclass_extension(path, development_only = false, parent = Sinatra, &block)
-      name = path.to_s.split('_').map { |e| e.capitalize }.join.to_sym
-      subclass_extensions[name] ||= [parent, name, development_only, block]
-      parent.autoload name, "#{parent.name.downcase}/#{path}" if parent
-    end
-
-    subclass_extension :advanced_routes
-    subclass_extension :compass
-    subclass_extension :config_file
-    subclass_extension :more_server
-    subclass_extension :namespace
-    subclass_extension :reloader, true
-    subclass_extension :sugar
-
-    subclass_extension(:flash, false, false) do |klass|
-      require 'rack/flash'
-      klass.use Rack::Flash, :flash_app_class => klass
-    end
-
-    subclass_extension(:default_charset, false, false) do |klass|
-      # FIXME: Does not work with autoloader?!
-      require 'sinatra/default_charset'
-      klass.register Sinatra::DefaultCharset
-    end
-
-    def self.apply_options(klass)
-      klass.set :app_file, klass.caller_files.first.expand_path unless klass.app_file?
-      klass.set :haml, :format => :html5, :escape_html => true
-      enable :sessions, :method_override, :show_exceptions
-    end
-
-    def self.subclass_for(list, inspection = nil)
-      @subclasses ||= {}
-      @subclasses[list] ||= Class.new(self) do
-        @inspection = inspection
-        define_singleton_method(:inspect) { @inspection || super() }
-        define_singleton_method(:inherited) do |klass|
-          super klass
-          list.each { |block| block.call klass }
-          apply_options klass
-        end
-      end
-    end
-
-    def self.generate_subclass(options = {})
-      options[:except] ||= []
-      options.keys.each { |k| raise ArgumentError, "unkown option #{k.inspect}" unless k == :except }
-      options[:except] = [*options[:except]]
-      list = subclass_extensions.inject([]) do |chosen, (ident, (parent, name, dev, block))|
-        next chosen if options[:except].include? ident or (dev and not development?)
-        block ||= proc { |klass| klass.register parent.const_get(name) }
-        chosen << block
-      end
-      subclass_for list, "#{self}(#{options.inspect[1..-2]})"
-    end
-  end
-
-  def self.BigBand(options = {})
-    BigBand.generate_subclass(options)
+    set :app_file, caller_files.first.expand_path unless app_file?
+    set :haml, :format => :html5, :escape_html => true
+    enable :sessions, :method_override, :show_exceptions
   end
 end
