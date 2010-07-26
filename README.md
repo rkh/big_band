@@ -45,7 +45,7 @@ General Goals
 -------------
 
 * No sub-project relies on BigBand
-* All sub-projects should work with MRI/REE >= 1.8.6 (including 1.9.x), JRuby >= 1.4.0 and Rubinius >= 1.0
+* All sub-projects should work with MRI/REE >= 1.8.6 (including 1.9.x), JRuby >= 1.4.0 (>= 1.6.0 recommended) and Rubinius >= 1.0
 * Some sub-projects should work with MagLev and IronRuby (partial MacRuby support planned for later release)
 * Ease to modify the stack
 
