@@ -9,17 +9,8 @@ Usage
 
 Simply replace `Sinatra::Base` with `Sinatra::BigBand` in your application.
 
-A simple example would be:
-
     require 'sinatra/big_band'
     class MyApp < Sinatra::BigBand
-      # ...
-    end
-
-Maybe you want all extensions except `Sinatra::Compass`?
-
-    require 'sinatra/big_band'
-    class MyApp < Sinatra::BigBand :except => :Compass
       # ...
     end
 
