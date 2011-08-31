@@ -34,7 +34,7 @@ class BigBand < Sinatra::Base
       end
 
       def self.new(file)
-        @map[file.expand_path] ||= super(file)
+        @map[file.expand_path] ||= self[*file]
       end
 
       def self.each(&block)
