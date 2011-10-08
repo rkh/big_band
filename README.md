@@ -1,3 +1,5 @@
+**Project is no longer maintained, please use [sinatra-contrib](http://www.sinatrarb.com/contrib/) instead.**
+
 Sinatra::BigBand
 ================
 
